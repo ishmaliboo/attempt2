@@ -1,10 +1,10 @@
 
-	var game = new Game(2000, 1000, 'dark maze');
+	var game = new Game(1000, 1000, 'dark maze');
 	var player, boy, floor;
 	var keyboard, up, down, left, right;
 	
-	var audioContext, track, panner
-	var drip;
+	var audioContext;
+	var drips;
 	
 	var wall;
 	var smallWall = [];
@@ -17,9 +17,9 @@ function preload() {
 
 
 	audioContext = new AudioContext();
-	drip = new Audio("sound/water-drops-daniel_simon.wav");
-	track = audioContext.createMediaElementSource(drip);
-	panner = new PannerNode(audioContext);
+	
+	drips = new soundSource(100, 100, "sound/SingleWaterDroplet.wav", audioContext);
+	drips2 = new soundSource(500, 200, "sound/alien.wav", audioContext, gain = 0.1);
 	
 	keyboard = new Keyboard();
 	left = keyboard.createLeftKey();
@@ -50,8 +50,8 @@ function create() {
 		boy.addAnimation('forward', [12, 13, 14, 15], 10);
 		boy.addAnimation('still', [0], 1);
 
-		track.connect(panner).connect(audioContext.destination);
-		drip.play();
+		drips.play();
+		drips2.play();
 }
 
 
@@ -85,12 +85,9 @@ function update() {
 		boy.setVelocityX(velocX);
 		boy.setVelocityY(velocY);
 		game.checkCollision(boy, wall);
-
-		var x = 100 - (boy.getX() / 5);
-		var y = 100 - (boy.getY() / 5);
 		
-		panner.positionX.value = x;
-		panner.positionY.value = y;
+		drips.update(boy.getX(), boy.getY())
+		drips2.update(boy.getX(), boy.getY())
 }
 
 function createMaze() {
@@ -102,14 +99,19 @@ function createMaze() {
 10000000000000000000000000000000000000000000000001\n\
 10000000000000000000000000000000000000000000000001\n\
 10000000000000000000000000000000000000000000000001\n\
-100001111000010000100001\n\
-10000111100001000011100001\n\
-1000011110000111111111111111\n\
-100001111000011111111111\n\
-1000011110000111111111111111\n\
-1000011110000111111111111111\n\
-11111111111111111111\n\
-11111111111111111111'
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+10000000000000000000000000000000000000000000000001\n\
+11111111111111111111111111111111111111111111111111'
 	
 	maze = maze.split('\n');
 	
@@ -124,9 +126,34 @@ function createMaze() {
 			}
 		}
 	}
+}
+
+function soundSource(x, y, snd, audioContext, gain = 1) {
+	this.x = x;
+	this.y = y;
+	this.snd = new Audio(snd);
+	this.track = audioContext.createMediaElementSource(this.snd);
 	
+	this.panner = new PannerNode(audioContext);
+	this.gainer = new GainNode(audioContext);
 	
+	this.gainer.gain.value = gain;
 	
+	this.track.connect(this.gainer).connect(this.panner).connect(audioContext.destination);
 	
+	this.play = function() {
+		this.snd.play()
+		this.snd.addEventListener('ended', () => {
+			this.snd.play();
+		}, true);
+	}
+	
+	this.update = function(playerx, playery, dmp = 10) {
+		var x = (this.x - playerx) / dmp;
+		var y = (this.y - playery) / dmp;
+		
+		this.panner.positionX.value = x;
+		this.panner.positionY.value = y;
+	}
 	
 }
