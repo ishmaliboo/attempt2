@@ -124,21 +124,12 @@ function update() {
 		if (space.isDown() && battery > 0) {
 			dark1.setAlpha(0);
 			battery = battery - (1)
-			
-			
-			console.log(battery);
 		}
 		
 		else {
 			dark1.setAlpha(1);
 			
 		}
-		
-		console.log(battery);
-		
-		
-		drips.update(boy.getX(), boy.getY());
-		drips2.update(boy.getX(), boy.getY());
 }
 
 function createMaze() {
