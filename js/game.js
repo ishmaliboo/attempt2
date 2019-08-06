@@ -1,20 +1,24 @@
 
 	var game = new Game(1000, 1000, 'dark maze');
-	var player, boy, floor;
+	var player, boy, floor, torch;
+	var battery = 100;
+
 	var keyboard, up, down, left, right;
 	
 	var audioContext;
 	var drips;
 	
 	var wall;
-	var smallWall = [];
+	
 	var maze;
+	
 	
 function preload() {
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
-
+	darkness = new Sprite("img/WhiteHole.png")
+	torch = new Sprite('img/torched.png');
 
 	audioContext = new AudioContext();
 	
@@ -26,6 +30,7 @@ function preload() {
 	right = keyboard.createRightKey();
 	up = keyboard.createUpKey();
 	down = keyboard.createDownKey();
+	space = keyboard.createSpaceKey();
 
 	var direction;
 	var velocY;
@@ -43,6 +48,8 @@ function create() {
 		wall.setImmovable(true);
 		
 		boy = player.create(20, 20);
+		dark1 = darkness.create(20 -977, 20-933);
+		torch = torch.create( 20 -987, 20-987);
 
 		boy.addAnimation('back', [0, 1, 2, 3], 10);
 		boy.addAnimation('left', [4, 5, 6, 7], 10);
@@ -86,8 +93,30 @@ function update() {
 		boy.setVelocityY(velocY);
 		game.checkCollision(boy, wall);
 		
-		drips.update(boy.getX(), boy.getY())
-		drips2.update(boy.getX(), boy.getY())
+		dark1.setX(boy.getX() - 977 + 32);
+		dark1.setY(boy.getY() - 933 + 32);
+		
+		torch.setX(boy.getX() - 987 + 32);
+		torch.setY(boy.getY() - 987 + 32);
+		
+		if (space.isDown() && battery > 0) {
+			dark1.setAlpha(0);
+			battery = battery - (1)
+			
+			
+			console.log(battery);
+		}
+		
+		else {
+			dark1.setAlpha(1);
+			
+		}
+		
+		console.log(battery);
+		
+		
+		drips.update(boy.getX(), boy.getY());
+		drips2.update(boy.getX(), boy.getY());
 }
 
 function createMaze() {
@@ -174,7 +203,7 @@ function soundSource(x, y, snd, audioContext, gain = 1) {
 	this.track.connect(this.gainer).connect(this.panner).connect(audioContext.destination);
 	
 	this.play = function() {
-		this.snd.play()
+		this.snd.play();
 		this.snd.addEventListener('ended', () => {
 			this.snd.play();
 		}, true);
