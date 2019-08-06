@@ -1,10 +1,14 @@
 
-	var game = new Game(1000, 1000, 'dark maze');
+	var game = new Game(2000, 1000, 'dark maze');
 	var player, boy, floor;
 	var keyboard, up, down, left, right;
 	
 	var audioContext, track, panner
-	var drip
+	var drip;
+	
+	var wall;
+	var smallWall = [];
+	var maze;
 	
 function preload() {
 	floor = new Sprite("img/floor.png");
@@ -33,7 +37,9 @@ function create() {
 		
 		floor = floor.create(0, 0, 1000, 1000);
 		
-		wall1 = wall.create(10, 100, 10, 100);
+		
+		createMaze();
+		wall1 = wall.create(100, 100, 10, 100);
 		wall.setImmovable(true);
 		
 		boy = player.create(100, 100);
@@ -86,4 +92,39 @@ function update() {
 		panner.positionX.value = x;
 		panner.positionY.value = y;
 }
+
+function createMaze() {
 	
+	var walllength = 20;
+	maze = '\
+	11111111111111111111\n\
+	10000000000000100001\n\
+	10000000000000100001\n\
+	10011110010000100001\n\
+	10010000010000111001\n\
+	11111111111111111111\n\
+	11111111111111111111\n\
+	11111111111111111111\n\
+	11111111111111111111\n\
+	11111111111111111111\n\
+	11111111111111111111'
+	
+	maze = maze.split('\n');
+	
+	for (var i = 0; i < maze.length; i++) {
+		maze[i].split('');
+	}
+	
+	for (var y = 0; y < maze.length; y++) {
+		for (var x = 0; x < maze[y].length; x++) {
+			if (maze[y][x] == '1') {
+				wall.create(x*walllength, y*walllength, 20, 20)
+			}
+		}
+	}
+	
+	
+	
+	
+	
+}
