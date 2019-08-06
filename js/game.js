@@ -124,9 +124,6 @@ function update() {
 		if (space.isDown() && battery > 0) {
 			dark1.setAlpha(0);
 			battery = battery - (1)
-			
-			
-			console.log(battery);
 		}
 		
 		else {
