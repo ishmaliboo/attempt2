@@ -133,12 +133,6 @@ function update() {
 			dark1.setAlpha(1);
 			
 		}
-		
-		console.log(battery);
-		
-		
-		drips.update(boy.getX(), boy.getY());
-		drips2.update(boy.getX(), boy.getY());
 }
 
 function createMaze() {
