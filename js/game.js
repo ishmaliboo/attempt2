@@ -4,6 +4,7 @@
 	var player, boy, floor, torch;
 	var battery = 100;
 	var score = 0;
+	var maxscore = 0;
 
 	var keyboard, up, down, left, right;
 	
@@ -45,6 +46,7 @@ function preload() {
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
+	snd_collect = new Audio("sound/collect_quiet.wav");
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
@@ -196,7 +198,7 @@ function createGame() {
 		
 		ambient.play();
 		
-		txt.textContent = ("Score: " + score + "/3\t\tBattery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
 		
 		
 }
@@ -254,6 +256,7 @@ function updateGame() {
 				fires[i].kill()
 				firesounds[i].stop();
 				score += 1;
+				snd_collect.cloneNode().play();
 			}
 		}
 		
@@ -304,7 +307,7 @@ function updateGame() {
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
 		
-		if (score >= 3){
+		if (score >= maxscore){
 			win = true;
 			state = "showEnd";
 		} else if (game.checkCollision(boy, monster) == true){
@@ -312,7 +315,7 @@ function updateGame() {
 			state = "showEnd"
 		}
 		
-		txt.textContent = ("Score: " + score + "/3\t\tBattery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
 }
 
 function createMaze() {
@@ -388,6 +391,7 @@ function createMaze() {
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2], 10);
 				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
 				firesounds[firesounds.length - 1].play();
+				maxscore += 1;
 			}
 		}
 	}
@@ -405,6 +409,8 @@ function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 	this.gainer.gain.value = gain;
 	
 	this.track.connect(this.gainer).connect(this.panner).connect(audioContext.destination);
+	
+	this.loop = loop;
 	
 	this.play = function() {
 		this.snd.play();
