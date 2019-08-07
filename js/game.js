@@ -24,6 +24,10 @@
 	
 	var txt;
 	
+	var win ;
+	
+	var time = 0;
+	
 function preload() {
 	
 	startButton = new Button("img/startButton.png", 240, 60,450, 500);
@@ -35,7 +39,8 @@ function preload() {
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
 	monster = new Sprite("img/monster.png");
-	end_game = new Sprite("img/JumpScare.png");
+	
+	
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
@@ -56,7 +61,10 @@ function preload() {
 	up = keyboard.createUpKey();
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
-
+	
+	end_game = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
+	
 	var direction;
 	var velocY;
 	var velocX;
@@ -65,7 +73,10 @@ function preload() {
 }
 
 function create() {
+	
+	
 	state = "menu";
+
 	createMenu();
 }
 
@@ -75,6 +86,49 @@ function update() {
 	} else if (state == "game") {
 		updateGame();
 	}
+	
+	else if (state == "showEnd"){
+		if (win == true){
+			state = "end";
+			wonGame();
+			
+		}else if (win == false){
+			
+			lostGame();
+			
+		}
+		
+	}
+	
+
+}
+
+function wonGame() {
+	gameOver.create(0, 0);
+
+	//fire2 = fire.create(200, 200);
+	//fire3 = fire.create(600, 200);
+	
+	txt.textContent = '';
+}
+
+function lostGame() {
+	
+	time += 1;
+	
+	if (time == 1){
+		jump = end_game.create(0, 0, 1000, 1000);
+	}
+	if (time >= 100){
+		jump.kill();
+
+		gameOver.create(0, 0);
+		state = 'end';
+	}
+	
+	txt.textContent = '';
+	
+	
 }
 
 function createMenu() {
@@ -249,6 +303,14 @@ function updateGame() {
 		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
+		
+		if (score >= 3){
+			win = true;
+			state = "showEnd";
+		} else if (game.checkCollision(boy, monster) == true){
+			win = false;
+			state = "showEnd"
+		}
 		
 		txt.textContent = ("Score: " + score + "/3\t\tBattery: " + battery);
 }
