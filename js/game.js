@@ -15,7 +15,18 @@
 	
 	var fires, firesounds;
 	
+	var monstersound;
+	
+	var growlcount;
+	
+	var startButton;
+	
 function preload() {
+	
+	startButton = new Button("img/startButton.png", 240, 60,450, 500);
+	
+	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
+	
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
@@ -24,8 +35,14 @@ function preload() {
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
+	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
+	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
+	
+
+	
+	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
 
 	audioContext = new AudioContext();
 	
@@ -39,9 +56,60 @@ function preload() {
 	var direction;
 	var velocY;
 	var velocX;
+	
+	var state;
 }
 
 function create() {
+	state = "menu";
+	createMenu();
+}
+
+function update() {
+	if (state == "menu") {
+		updateMenu();
+	} else if (state == "game") {
+		updateGame();
+	}
+}
+
+function createMenu() {
+	console.log("created menu");
+	
+	
+	
+	//startButton = game.add.button(game.world.centerX - 95, 400, 'button');
+	
+	//startButton.onInputOver.add()
+	
+	instructionButton.createButton();
+	instructionButton.addOverAction(()=>{}, [0]);
+	instructionButton.addOutAction(()=>{}, [1]);
+	
+	startButton.createButton();
+	startButton.addOverAction(() => {}, [1]);
+	startButton.addOutAction(() => {}, [0]);
+
+	//startButton.onInputUp(function(){console.log('Hello')});
+}
+
+function updateMenu() {
+	
+	startButton.addUpAction( function(){
+		
+		//Phaser.Input.Gamepad.startButton.destroy();
+		
+		//instructionButton.destroy();
+		//startButton.destroy();
+		// startButton.kill();
+		console.log('Click');
+		createGame();
+		state = "game";
+	} );
+
+}
+
+function createGame() {
 	
 		
 		floor = floor.create(0, 0, 1000, 1000);
@@ -64,12 +132,13 @@ function create() {
 		monster = monster.create(800,700);
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
+		monstersound = new soundSource(0, 0, snd_monster, audioContext);
 		
 		ambient.play();
 }
 
 
-function update() {
+function updateGame() {
 		velocY = 0;
 		velocX = 0;
 		if (left.isDown()) {
@@ -104,11 +173,17 @@ function update() {
 			fires[i].playAnimation('burn');
 		}
 		
-		ambient.update(boy.getX(), boy.getY())
+		ambient.update(boy.getX(), boy.getY());
 		for (i = 0; i < firesounds.length; i++) {
 			firesounds[i].update(boy.getX(), boy.getY())
 		}
+		monstersound.x = monster.getX();
+		monstersound.y = monster.getY();
+		monstersound.update(boy.getX(), boy.getY());
 		
+		if (Math.random() < 0.01) {
+			monstersound.play();
+		}
 		
 		for (i = 0; i < fires.length; i++) {
 			if (game.checkCollision(boy, fires[i])) {
@@ -243,7 +318,7 @@ function createMaze() {
 	}
 }
 
-function soundSource(x, y, snd, audioContext, gain = 1) {
+function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 	this.x = x;
 	this.y = y;
 	this.snd = snd;
@@ -258,9 +333,11 @@ function soundSource(x, y, snd, audioContext, gain = 1) {
 	
 	this.play = function() {
 		this.snd.play();
-		this.snd.addEventListener('ended', () => {
-			this.snd.play();
-		}, true);
+		if (this.loop) {
+			this.snd.addEventListener('ended', () => {
+				this.snd.play();
+			}, true);
+		}
 	}
 	
 	this.stop = function() {
