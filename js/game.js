@@ -15,7 +15,14 @@
 	
 	var fire1;
 	
+	var startButton;
+	
 function preload() {
+	
+	startButton = new Button("img/startButton.png", 240, 60,450, 500);
+	
+	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
+	
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
@@ -25,6 +32,10 @@ function preload() {
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
+	
+
+	
+	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
 
 	audioContext = new AudioContext();
 	
@@ -57,13 +68,38 @@ function update() {
 
 function createMenu() {
 	console.log("created menu");
+	
+	
+	
+	//startButton = game.add.button(game.world.centerX - 95, 400, 'button');
+	
+	//startButton.onInputOver.add()
+	
+	instructionButton.createButton();
+	instructionButton.addOverAction(()=>{}, [0]);
+	instructionButton.addOutAction(()=>{}, [1]);
+	
+	startButton.createButton();
+	startButton.addOverAction(() => {}, [1]);
+	startButton.addOutAction(() => {}, [0]);
+
+	//startButton.onInputUp(function(){console.log('Hello')});
 }
 
 function updateMenu() {
-	if (space.isDown()) {
+	
+	startButton.addUpAction( function(){
+		
+		//Phaser.Input.Gamepad.startButton.destroy();
+		
+		//instructionButton.destroy();
+		//startButton.destroy();
+		// startButton.kill();
+		console.log('Click');
 		createGame();
 		state = "game";
-	}
+	} );
+
 }
 
 function createGame() {
