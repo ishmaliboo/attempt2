@@ -2,7 +2,7 @@
 	var game = new Game(1000, 1000, 'dark maze');
 	var player, boy, floor, fire;
 	var player, boy, floor, torch;
-	var battery = 100;
+	var battery = 100000000;
 
 	var keyboard, up, down, left, right;
 	
@@ -32,6 +32,7 @@ function preload() {
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
 	monster = new Sprite("img/monster.png");
+	end_game = new Sprite("img/JumpScare.png");
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
@@ -238,6 +239,7 @@ function updateGame() {
 		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
+
 }
 
 function createMaze() {
