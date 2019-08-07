@@ -3,6 +3,7 @@
 	var player, boy, floor, fire;
 	var player, boy, floor, torch;
 	var battery = 100;
+	var score = 0;
 
 	var keyboard, up, down, left, right;
 	
@@ -20,6 +21,8 @@
 	var growlcount;
 	
 	var startButton;
+	
+	var txt;
 	
 function preload() {
 	
@@ -40,7 +43,7 @@ function preload() {
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
 	
-
+	txt = document.querySelector('#gametext');
 	
 	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
 
@@ -91,6 +94,8 @@ function createMenu() {
 	startButton.addOutAction(() => {}, [0]);
 
 	//startButton.onInputUp(function(){console.log('Hello')});
+	
+	txt.textContent = "";
 }
 
 function updateMenu() {
@@ -135,6 +140,10 @@ function createGame() {
 		monstersound = new soundSource(0, 0, snd_monster, audioContext);
 		
 		ambient.play();
+		
+		txt.textContent = ("Score: " + score + "/3\t\tBattery: " + battery);
+		
+		
 }
 
 
@@ -189,6 +198,7 @@ function updateGame() {
 			if (game.checkCollision(boy, fires[i])) {
 				fires[i].kill()
 				firesounds[i].stop();
+				score += 1;
 			}
 		}
 		
@@ -238,6 +248,8 @@ function updateGame() {
 		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
+		
+		txt.textContent = ("Score: " + score + "/3\t\tBattery: " + battery);
 }
 
 function createMaze() {
