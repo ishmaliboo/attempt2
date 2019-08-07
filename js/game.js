@@ -4,6 +4,7 @@
 	var player, boy, floor, torch;
 	var battery = 100;
 	var score = 0;
+	var maxscore = 0;
 
 	var keyboard, up, down, left, right;
 	
@@ -143,7 +144,7 @@ function createGame() {
 		
 		ambient.play();
 		
-		txt.textContent = ("Score: " + score + "/3 Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
 		
 		
 }
@@ -252,7 +253,7 @@ function updateGame() {
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
 		
-		txt.textContent = ("Score: " + score + "/3 Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
 }
 
 function createMaze() {
@@ -328,6 +329,7 @@ function createMaze() {
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2], 10);
 				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
 				firesounds[firesounds.length - 1].play();
+				maxscore += 1;
 			}
 		}
 	}
