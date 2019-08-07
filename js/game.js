@@ -44,16 +44,25 @@ function preload() {
 
 function create() {
 	state = "menu";
+	createMenu();
 }
 
 function update() {
 	if (state == "menu") {
-		if (space.isDown()) {
-			createGame();
-			state = "game";
-		}
+		updateMenu();
 	} else if (state == "game") {
 		updateGame();
+	}
+}
+
+function createMenu() {
+	console.log("created menu");
+}
+
+function updateMenu() {
+	if (space.isDown()) {
+		createGame();
+		state = "game";
 	}
 }
 
