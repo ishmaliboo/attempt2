@@ -38,9 +38,26 @@ function preload() {
 	var direction;
 	var velocY;
 	var velocX;
+	
+	var state;
 }
 
 function create() {
+	state = "menu";
+}
+
+function update() {
+	if (state == "menu") {
+		if (space.isDown()) {
+			createGame();
+			state = "game";
+		}
+	} else if (state == "game") {
+		updateGame();
+	}
+}
+
+function createGame() {
 	
 		
 		floor = floor.create(0, 0, 1000, 1000);
@@ -72,7 +89,7 @@ function create() {
 }
 
 
-function update() {
+function updateGame() {
 		velocY = 0;
 		velocX = 0;
 		if (left.isDown()) {
