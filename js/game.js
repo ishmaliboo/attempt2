@@ -20,6 +20,7 @@ function preload() {
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
+	monster = new Sprite("img/monster.png");
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
@@ -59,6 +60,8 @@ function create() {
 		boy.addAnimation('right', [8, 9, 10, 11], 10);
 		boy.addAnimation('forward', [12, 13, 14, 15], 10);
 		boy.addAnimation('still', [0], 1);
+
+		monster = monster.create(800,700);
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
 		
@@ -129,6 +132,37 @@ function update() {
 			dark1.setAlpha(1);
 			
 		}
+
+		mvelocY = 0;
+		mvelocX = 0;
+		
+
+		if (game.checkCollision(monster,wall)) {
+			mdirect = Math.round(Math.random() * 3);
+		}
+		else if (typeof(mdirect) == 'undefined') {
+			mdirect = Math.round(Math.random() * 3);	
+		}
+
+		if (mdirect == 0){
+			mvelocX = -100;
+			mvelocY = 0;
+		}
+		if (mdirect == 1){
+			mvelocX = 100;
+			mvelocY = 0;
+			}
+		if (mdirect == 2){
+			mvelocY = -100;
+			mvelocX = 0;
+		}
+		if (mdirect == 3){
+			mvelocY = 100;
+			mvelocX = 0;
+		}
+		
+		monster.setVelocityX(mvelocX);
+		monster.setVelocityY(mvelocY);
 }
 
 function createMaze() {
