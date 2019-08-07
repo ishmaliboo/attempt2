@@ -1,8 +1,11 @@
 
-	var game = new Game(1000, 1000, 'dark maze');
+	var game = new Game(2000, 1000, 'dark maze');
 	var player, boy, floor, fire;
 	var player, boy, floor, torch;
 	var battery = 100;
+	var score = 0;
+	
+	var txt_score, txt_battery;
 
 	var keyboard, up, down, left, right;
 	
@@ -35,6 +38,7 @@ function preload() {
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
 
+	
 	var direction;
 	var velocY;
 	var velocX;
@@ -63,16 +67,38 @@ function create() {
 		fire1 = fire.create(500, 200, 32, 64);
 		
 		fire1.addAnimation('burn', [0, 1, 2], 10);
-
+		
+		
+		
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
 		fire1snd = new soundSource(500, 200, snd_alien, audioContext, gain = 0.1);
 		
 		ambient.play();
 		fire1snd.play();
+		
+		// txt_score = new Text("Score: 0/1", 1000, 20, "34px", "Arial", "#ffffff");
+		
+		//fire1.addChild(txt_score);
+		
+		// Phaser.text.txt_score.Depth = 100;
+		
+		// txt_score.parent.bringToTop(txt_score);
+		// txt_score.setDepth(100);
+		
+		// dark1.setDepth(1);
+		// torch.setDepth(2);
+		
+		// this.children.bringToTop(txt_score);
+		
+		
+		txt_score = this.add.text(1000, 20, "Score: 0/1", {fontSize: "30px", fill:"#ffffff"});
+		Phaser.GameObject.txt_score.setDepth(100);
 }
 
 
 function update() {
+	
+		
 		velocY = 0;
 		velocX = 0;
 		if (left.isDown()) {
@@ -108,18 +134,24 @@ function update() {
 		ambient.update(boy.getX(), boy.getY())
 		fire1snd.update(boy.getX(), boy.getY())
 		
+		dark1.setX(boy.getX() - 977 + 32);
+		dark1.setY(boy.getY() - 933 + 32);
+		
+		
+		torch.setX(boy.getX() - 987 + 32);
+		torch.setY(boy.getY() - 987 + 32);
+		
 		
 		
 		if (game.checkCollision(boy, fire)) {
 			fire1.kill()
 			fire1snd.stop();
+			score += 1;
+			
+			
 		}
 		
-		dark1.setX(boy.getX() - 977 + 32);
-		dark1.setY(boy.getY() - 933 + 32);
-		
-		torch.setX(boy.getX() - 987 + 32);
-		torch.setY(boy.getY() - 987 + 32);
+
 		
 		if (space.isDown() && battery > 0) {
 			dark1.setAlpha(0);
@@ -130,6 +162,12 @@ function update() {
 			dark1.setAlpha(1);
 			
 		}
+		
+		
+		
+		txt_score.setText("Score: " + score + "/1");
+		
+		
 }
 
 function createMaze() {
