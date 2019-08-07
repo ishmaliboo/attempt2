@@ -3,6 +3,8 @@
 	var player, boy, floor, fire;
 	var player, boy, floor, torch;
 	var battery = 100;
+	var score = 0;
+	var maxscore = 0;
 
 	var keyboard, up, down, left, right;
 	
@@ -21,6 +23,12 @@
 	
 	var startButton;
 	
+	var txt;
+	
+	var win ;
+	
+	var time = 0;
+	
 function preload() {
 	
 	startButton = new Button("img/startButton.png", 240, 60,450, 500);
@@ -32,15 +40,18 @@ function preload() {
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
 	monster = new Sprite("img/monster.png");
+	
+	
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
+	snd_collect = new Audio("sound/collect_quiet.wav");
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
 	
-
+	txt = document.querySelector('#gametext');
 	
 	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
 
@@ -52,7 +63,10 @@ function preload() {
 	up = keyboard.createUpKey();
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
-
+	
+	end_game = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
+	
 	var direction;
 	var velocY;
 	var velocX;
@@ -61,7 +75,10 @@ function preload() {
 }
 
 function create() {
+	
+	
 	state = "menu";
+
 	createMenu();
 }
 
@@ -71,6 +88,49 @@ function update() {
 	} else if (state == "game") {
 		updateGame();
 	}
+	
+	else if (state == "showEnd"){
+		if (win == true){
+			state = "end";
+			wonGame();
+			
+		}else if (win == false){
+			
+			lostGame();
+			
+		}
+		
+	}
+	
+
+}
+
+function wonGame() {
+	gameOver.create(0, 0);
+
+	//fire2 = fire.create(200, 200);
+	//fire3 = fire.create(600, 200);
+	
+	txt.textContent = '';
+}
+
+function lostGame() {
+	
+	time += 1;
+	
+	if (time == 1){
+		jump = end_game.create(0, 0, 1000, 1000);
+	}
+	if (time >= 100){
+		jump.kill();
+
+		gameOver.create(0, 0);
+		state = 'end';
+	}
+	
+	txt.textContent = '';
+	
+	
 }
 
 function createMenu() {
@@ -91,6 +151,8 @@ function createMenu() {
 	startButton.addOutAction(() => {}, [0]);
 
 	//startButton.onInputUp(function(){console.log('Hello')});
+	
+	txt.textContent = "";
 }
 
 function updateMenu() {
@@ -135,6 +197,10 @@ function createGame() {
 		monstersound = new soundSource(0, 0, snd_monster, audioContext);
 		
 		ambient.play();
+		
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
+		
+		
 }
 
 
@@ -189,6 +255,8 @@ function updateGame() {
 			if (game.checkCollision(boy, fires[i])) {
 				fires[i].kill()
 				firesounds[i].stop();
+				score += 1;
+				snd_collect.cloneNode().play();
 			}
 		}
 		
@@ -238,6 +306,16 @@ function updateGame() {
 		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
+		
+		if (score >= maxscore){
+			win = true;
+			state = "showEnd";
+		} else if (game.checkCollision(boy, monster) == true){
+			win = false;
+			state = "showEnd"
+		}
+		
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
 }
 
 function createMaze() {
@@ -313,6 +391,7 @@ function createMaze() {
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2], 10);
 				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
 				firesounds[firesounds.length - 1].play();
+				maxscore += 1;
 			}
 		}
 	}
@@ -330,6 +409,8 @@ function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 	this.gainer.gain.value = gain;
 	
 	this.track.connect(this.gainer).connect(this.panner).connect(audioContext.destination);
+	
+	this.loop = loop;
 	
 	this.play = function() {
 		this.snd.play();
