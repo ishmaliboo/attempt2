@@ -15,14 +15,21 @@
 	
 	var fires, firesounds;
 	
+	var monstersound;
+	
+	var growlcount;
+	
 function preload() {
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
+	monster = new Sprite("img/monster.png");
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
+	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
+	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
 
@@ -60,7 +67,10 @@ function create() {
 		boy.addAnimation('forward', [12, 13, 14, 15], 10);
 		boy.addAnimation('still', [0], 1);
 
+		monster = monster.create(800,700);
+
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
+		monstersound = new soundSource(0, 0, snd_monster, audioContext);
 		
 		ambient.play();
 }
@@ -101,11 +111,17 @@ function update() {
 			fires[i].playAnimation('burn');
 		}
 		
-		ambient.update(boy.getX(), boy.getY())
+		ambient.update(boy.getX(), boy.getY());
 		for (i = 0; i < firesounds.length; i++) {
 			firesounds[i].update(boy.getX(), boy.getY())
 		}
+		monstersound.x = monster.getX();
+		monstersound.y = monster.getY();
+		monstersound.update(boy.getX(), boy.getY());
 		
+		if (Math.random() < 0.01) {
+			monstersound.play();
+		}
 		
 		for (i = 0; i < fires.length; i++) {
 			if (game.checkCollision(boy, fires[i])) {
@@ -129,6 +145,37 @@ function update() {
 			dark1.setAlpha(1);
 			
 		}
+
+		mvelocY = 0;
+		mvelocX = 0;
+		
+
+		if (game.checkCollision(monster,wall)) {
+			mdirect = Math.round(Math.random() * 3);
+		}
+		else if (typeof(mdirect) == 'undefined') {
+			mdirect = Math.round(Math.random() * 3);	
+		}
+
+		if (mdirect == 0){
+			mvelocX = -100;
+			mvelocY = 0;
+		}
+		if (mdirect == 1){
+			mvelocX = 100;
+			mvelocY = 0;
+			}
+		if (mdirect == 2){
+			mvelocY = -100;
+			mvelocX = 0;
+		}
+		if (mdirect == 3){
+			mvelocY = 100;
+			mvelocX = 0;
+		}
+		
+		monster.setVelocityX(mvelocX);
+		monster.setVelocityY(mvelocY);
 }
 
 function createMaze() {
@@ -209,7 +256,7 @@ function createMaze() {
 	}
 }
 
-function soundSource(x, y, snd, audioContext, gain = 1) {
+function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 	this.x = x;
 	this.y = y;
 	this.snd = snd;
@@ -224,9 +271,11 @@ function soundSource(x, y, snd, audioContext, gain = 1) {
 	
 	this.play = function() {
 		this.snd.play();
-		this.snd.addEventListener('ended', () => {
-			this.snd.play();
-		}, true);
+		if (this.loop) {
+			this.snd.addEventListener('ended', () => {
+				this.snd.play();
+			}, true);
+		}
 	}
 	
 	this.stop = function() {
