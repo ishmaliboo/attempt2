@@ -35,6 +35,7 @@ function preload() {
 	wall = new Sprite("img/DungeonFloor.jpg");
 	fire = new Sprite("img/fire.png", 99, 133);
 	monster = new Sprite("img/monster.png");
+	end_game = new Sprite("img/JumpScare.png");
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
