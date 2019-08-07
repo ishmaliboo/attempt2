@@ -13,7 +13,7 @@
 	
 	var maze;
 	
-	var fire1;
+	var fires, firesounds;
 	
 function preload() {
 	floor = new Sprite("img/floor.png");
@@ -59,16 +59,10 @@ function create() {
 		boy.addAnimation('right', [8, 9, 10, 11], 10);
 		boy.addAnimation('forward', [12, 13, 14, 15], 10);
 		boy.addAnimation('still', [0], 1);
-		
-		fire1 = fire.create(500, 200, 32, 64);
-		
-		fire1.addAnimation('burn', [0, 1, 2], 10);
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
-		fire1snd = new soundSource(500, 200, snd_alien, audioContext, gain = 0.1);
 		
 		ambient.play();
-		fire1snd.play();
 }
 
 
@@ -103,16 +97,21 @@ function update() {
 		boy.setVelocityY(velocY);
 		game.checkCollision(boy, wall);
 		
-		fire1.playAnimation('burn');
+		for (var i = 0; i < fires.length; i++) {
+			fires[i].playAnimation('burn');
+		}
 		
 		ambient.update(boy.getX(), boy.getY())
-		fire1snd.update(boy.getX(), boy.getY())
+		for (i = 0; i < firesounds.length; i++) {
+			firesounds[i].update(boy.getX(), boy.getY())
+		}
 		
 		
-		
-		if (game.checkCollision(boy, fire)) {
-			fire1.kill()
-			fire1snd.stop();
+		for (i = 0; i < fires.length; i++) {
+			if (game.checkCollision(boy, fires[i])) {
+				fires[i].kill()
+				firesounds[i].stop();
+			}
 		}
 		
 		dark1.setX(boy.getX() - 977 + 32);
@@ -123,7 +122,7 @@ function update() {
 		
 		if (space.isDown() && battery > 0) {
 			dark1.setAlpha(0);
-			battery = battery - (1)
+			battery = battery - (0)
 		}
 		
 		else {
@@ -133,8 +132,11 @@ function update() {
 }
 
 function createMaze() {
+	fires = new Array();
+	firesounds = new Array();
 	
 	var walllength = 20;
+	
 	maze = '\
 11111111111111111111111111111111111111111111111111\n\
 10000000000000000000000000000001000000000000000001\n\
@@ -143,7 +145,7 @@ function createMaze() {
 10000000000000000000000000000001000000000000000001\n\
 10000111110000100001111100000001111111111111100001\n\
 10000100000000100001000000000000000000100000000001\n\
-10000100000000100001000000000000000000100000000001\n\
+10000100222000100001000000000000000000100000000001\n\
 10000100000000100001000000000000000000100000000001\n\
 10000100000000100001000000000000000000100000000001\n\
 10000111111111100001000011111111000000100001000001\n\
@@ -197,6 +199,11 @@ function createMaze() {
 		for (var x = 0; x < maze[y].length; x++) {
 			if (maze[y][x] == '1') {
 				wall.create(x*walllength, y*walllength, 20, 20)
+			} else if (maze[y][x] == "2") {
+				fires.push(fire.create(x*walllength, y*walllength, 32, 64));
+				fires[fires.length - 1].addAnimation('burn', [0, 1, 2], 10);
+				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
+				firesounds[firesounds.length - 1].play();
 			}
 		}
 	}
