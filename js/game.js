@@ -101,7 +101,6 @@ function update() {
 			fires[i].playAnimation('burn');
 		}
 		
-<<<<<<< Updated upstream
 		ambient.update(boy.getX(), boy.getY())
 		for (i = 0; i < firesounds.length; i++) {
 			firesounds[i].update(boy.getX(), boy.getY())
@@ -112,29 +111,8 @@ function update() {
 			if (game.checkCollision(boy, fires[i])) {
 				fires[i].kill()
 				firesounds[i].stop();
-=======
-
-		if (game.checkCollision(monster,wall)) {
-			mdirect = Math.round(Math.random() * 3);
-		}
-		else if (typeof(mdirect) == 'undefined') {
-			mdirect = Math.round(Math.random() * 3);	
-		}
-
-		if (mdirect == 0){
-			mvelocX = -100;
-			mvelocY = 0;
-		}
-		if (mdirect == 1){
-			mvelocX = 100;
-			mvelocY = 0;
->>>>>>> Stashed changes
 			}
-		if (mdirect == 2){
-			mvelocY = -100;
-			mvelocX = 0;
 		}
-<<<<<<< Updated upstream
 		
 		dark1.setX(boy.getX() - 977 + 32);
 		dark1.setY(boy.getY() - 933 + 32);
@@ -151,17 +129,6 @@ function update() {
 			dark1.setAlpha(1);
 			
 		}
-=======
-		if (mdirect == 3){
-			mvelocY = 100;
-			mvelocX = 0;
-		}
-		
-		monster.setVelocityX(mvelocX);
-		monster.setVelocityY(mvelocY);
-
-
->>>>>>> Stashed changes
 }
 
 function createMaze() {
