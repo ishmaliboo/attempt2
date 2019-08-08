@@ -31,11 +31,15 @@
 	
 	var playerstart, monsterstart;
 	
+	var instructions, instructionsScreen;
+	
 function preload() {
 	
 	startButton = new Button("img/startButton.png", 240, 60,450, 500);
 	
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
+	instructions = new Sprite("img/Instructions.png");
+	
 	
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
@@ -50,8 +54,11 @@ function preload() {
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	
+	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
+	
+	
 	
 	txt = document.querySelector('#gametext');
 	
@@ -89,9 +96,7 @@ function update() {
 		updateMenu();
 	} else if (state == "game") {
 		updateGame();
-	}
-	
-	else if (state == "showEnd"){
+	} else if (state == "showEnd"){
 		if (win == true){
 			state = "end";
 			wonGame();
@@ -102,6 +107,8 @@ function update() {
 			
 		}
 		
+	} else if (state == "instructions") {
+		updateInstructions();
 	}
 	
 
@@ -160,19 +167,30 @@ function createMenu() {
 function updateMenu() {
 	
 	startButton.addUpAction( function(){
-		
-		//Phaser.Input.Gamepad.startButton.destroy();
-		
-		//instructionButton.destroy();
-		//startButton.destroy();
-		// startButton.kill();
-		console.log('Click');
 		createGame();
 		state = "game";
 	} );
+	
+	instructionButton.addUpAction( function(){
+		createInstructions();
+		state = "instructions";
+	} );
+	
+	
 
 }
 
+function createInstructions() {
+	instructionsScreen = instructions.create(0, 0, 1000, 1000);
+}
+
+function updateInstructions() {
+
+	if (space.isDown()) {
+		instructionsScreen.setAlpha(0);
+		state = "menu";
+	}
+}
 function createGame() {
 	
 		
@@ -207,6 +225,9 @@ function createGame() {
 
 
 function updateGame() {
+		if (typeof(instructionsScreen) != 'undefined') {
+			instructionsScreen.kill();
+		}
 		velocY = 0;
 		velocX = 0;
 		if (left.isDown()) {
