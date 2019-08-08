@@ -1,4 +1,4 @@
-var game = new Game(1000, 1000, 'dark maze');
+var game = new Game(1000, 600, 'dark maze');
 var instructionPage;
 var instructions;
 var startButton;
@@ -15,11 +15,13 @@ function create() {
 	startButton.createButton();
 	startButton.addOverAction(() => {}, [1]);
 	startButton.addOutAction(() => {}, [0]);
+	
+	startButton.addUpAction( function(){
+		window.location.href = "game.html"
+		
+	} );
 }
 
 function update() {
-	startButton.addUpAction( function(){
-		window.location.href = "index.html"
-		
-	} );
+
 }
