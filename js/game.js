@@ -40,7 +40,7 @@ function preload() {
 	floor = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
-	fire = new Sprite("img/fire.png", 99, 133);
+	
 	monster = new Sprite("img/monster.png");
 	
 	
@@ -51,6 +51,10 @@ function preload() {
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	// perhaps for start game
 	snd_start = new Audio("sound/atmosphere.wav")
+	
+	end_game = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
+	fire = new Sprite("img/fire.png", 99, 133);
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
@@ -68,8 +72,7 @@ function preload() {
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
 	
-	end_game = new Sprite("img/JumpScare.png");
-	gameOver = new Sprite("img/GameOver.png");
+	
 	
 	var direction;
 	var velocY;
@@ -110,15 +113,38 @@ function update() {
 }
 
 function wonGame() {
+	for(var i = 0 ; i < maxscore; i++){
+		fires[i].kill();
+	}
+	dark1.kill();
+	torch.kill();
+	fires[0].create(300, 400);
+	fires[1].create(700, 400);
+	
+	fires[0].addAnimation('burn', [0, 1, 2], 10);
+	fires[1].addAnimation('burn', [0, 1, 2], 10);
+	fires[0].playAnimation('burn');
+	fires[1].playAnimation('burn');	
 	gameOver.create(0, 0);
-
-	//fire2 = fire.create(200, 200);
-	//fire3 = fire.create(600, 200);
 	
 	txt.textContent = '';
+	monstersound.stop()
+	
+	for(var i = 0 ; i < maxscore; i++){
+		firesounds[i].stop();
+	}
+	
+	
 }
 
 function lostGame() {
+	for(var i = 0 ; i < maxscore; i++){
+		fires[i].kill();
+	}
+	
+	
+	dark1.kill();
+	torch.kill();
 	
 	time += 1;
 	
@@ -127,13 +153,26 @@ function lostGame() {
 	}
 	if (time >= 100){
 		jump.kill();
-
+		
+		
 		gameOver.create(0, 0);
+		
+		fires[0] = fire.create(200, 250);
+		fires[1] = fire.create(700, 250);
+		fires[0].addAnimation('burn', [0, 1, 2], 10);
+		fires[1].addAnimation('burn', [0, 1, 2], 10);
+		fires[0].playAnimation('burn');
+		fires[1].playAnimation('burn');
+		
 		state = 'end';
 	}
 	
 	txt.textContent = '';
+	monstersound.stop()
 	
+	for(var i = 0 ; i < maxscore; i++){
+		firesounds[i].stop();
+	}
 	
 }
 
@@ -171,6 +210,7 @@ function updateMenu() {
 		console.log('Click');
 		createGame();
 		state = "game";
+		
 	} );
 
 }
@@ -308,6 +348,8 @@ function updateGame() {
 			mvelocX = 0;
 		}
 		
+
+		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
 		
@@ -330,8 +372,8 @@ function createMaze() {
 	
 	maze = '\
 11111111111111111111111111111111111111111111111111\n\
-10000000000000000000000000000001000000000000000001\n\
-10000000000000000000000000000001000000000220000001\n\
+1000p000000000000000000000000001000000000000000001\n\
+1000000000000000000000000000000100000m000200000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000111110000100001111100000001111111111111100001\n\
@@ -369,7 +411,7 @@ function createMaze() {
 10000010000001000000000000000000000000000000100001\n\
 10000010000001000000000000000000000000000000100001\n\
 10000000000001000000000000000000000000000000100001\n\
-1002000000000111111100m000000000111111111111100001\n\
+10020000000001111111000000000000111111111111100001\n\
 10000000000000000000000000000000000000000000000001\n\
 10000000000000000000000000000000000000000000000001\n\
 11111110000000000000000000000000000000000000000001\n\
