@@ -119,14 +119,14 @@ function wonGame() {
 	
 	backgroundmusic.play();
 	
-	fires[0].create(300, 400);
-	fires[1].create(700, 400);
+	fires[0] = fire.create(300, 400);
+	fires[1] = fire.create(700, 400);
 	
 	fires[0].addAnimation('burn', [0, 1, 2], 10);
 	fires[1].addAnimation('burn', [0, 1, 2], 10);
 	fires[0].playAnimation('burn');
 	fires[1].playAnimation('burn');	
-	gameOver.create(0, -200);
+	gameOver.create(0, 0);
 	
 	txt.textContent = '';
 	monstersound.stop()
@@ -158,7 +158,7 @@ function lostGame() {
 		jump.kill();
 		
 		backgroundmusic.play();
-		gameOver.create(0, -200);
+		gameOver.create(0, 0);
 		
 		fires[0] = fire.create(200, 250);
 		fires[1] = fire.create(700, 250);

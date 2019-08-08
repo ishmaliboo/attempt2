@@ -8,6 +8,7 @@ function preload() {
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 400);
 	snd_start = new Audio("sound/atmosphere-fixed.wav")
 	
+	
 	backgroundmusic = new soundSource(0, 0, snd_start, new AudioContext());
 	
 }
