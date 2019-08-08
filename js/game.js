@@ -120,7 +120,7 @@ function wonGame() {
 	fires[1].addAnimation('burn', [0, 1, 2], 10);
 	fires[0].playAnimation('burn');
 	fires[1].playAnimation('burn');	
-	gameOver.create(0, 0);
+	gameOver.create(0, -200);
 	
 	txt.textContent = '';
 	monstersound.stop()
@@ -152,7 +152,7 @@ function lostGame() {
 		jump.kill();
 		
 		backgroundmusic.play();
-		gameOver.create(0, 0);
+		gameOver.create(0, -200);
 		
 		fires[0] = fire.create(200, 250);
 		fires[1] = fire.create(700, 250);
@@ -175,7 +175,7 @@ function lostGame() {
 
 
 function createGame() {
-	
+		game.setBackgroundColour("#3f3f3f");
 		
 		floor = floor.create(0, 0, 1000, 600);
 		
