@@ -6,12 +6,13 @@ var startButton;
 function preload() {
 	
 	instructions = new Sprite("img/Instructions.png");
-	startButton = new Button("img/startButton.png", 240, 60,0, 0);
+	startButton = new Button("img/startButton.png", 240, 60, 700, 200);
 }
 
 
 function create() {
-	instructionPage = instructions.create(0, 0);
+	game.setBackgroundColour("#585858");
+	instructionPage = instructions.create(50, 0, 600, 600);
 	startButton.createButton();
 	startButton.addOverAction(() => {}, [1]);
 	startButton.addOutAction(() => {}, [0]);
