@@ -119,8 +119,8 @@ function createGameOver() {
 	fires[0] = fire.create(100, 150);
 	fires[1] = fire.create(780, 150);
 	
-	fires[0].addAnimation('burn', [0, 1, 2], 10);
-	fires[1].addAnimation('burn', [0, 1, 2], 10);
+	fires[0].addAnimation('burn', [0, 1, 2, 1], 10);
+	fires[1].addAnimation('burn', [0, 1, 2, 1], 10);
 	fires[0].playAnimation('burn');
 	fires[1].playAnimation('burn');	
 	gameOver.create(0, 0);
@@ -431,7 +431,7 @@ function createMaze() {
 				wall.create(x*walllength, y*walllength, 20, 20)
 			} else if (maze[y][x] == "2") {
 				fires.push(fire.create(x*walllength, y*walllength, 32, 64));
-				fires[fires.length - 1].addAnimation('burn', [0, 1, 2], 10);
+				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
 				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
 				firesounds[firesounds.length - 1].play();
 				maxscore += 1;
