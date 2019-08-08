@@ -1,8 +1,12 @@
 
 	var game = new Game(1000, 600, 'dark maze');
+
+	const MAX_BATTERY = 100;
+	const CHARGE = 0.1;
+	
 	var player, boy, floor, fire;
-	var player, boy, floor, torch;
-	var battery = 1e17;
+	var floorsprite, torch;
+	var battery = MAX_BATTERY;
 	var score = 0;
 	var maxscore = 0;
 
@@ -35,13 +39,15 @@
 	
 	var state = "game";
 	
+
+	
 function preload() {
 	
 	startButton = new Button("img/startButton.png", 240, 60,450, 500);
 	
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
 	
-	floor = new Sprite("img/floor.png");
+	floorsprite = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
 	
@@ -177,7 +183,7 @@ function lostGame() {
 function createGame() {
 		game.setBackgroundColour("#3f3f3f");
 		
-		floor = floor.create(0, 0, 1000, 600);
+		floor = floorsprite.create(0, 0, 1000, 1000);
 		
 		
 		createMaze();
@@ -202,7 +208,7 @@ function createGame() {
 		
 		ambient.play();
 		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 		
 		
 }
@@ -277,7 +283,10 @@ function updateGame() {
 		
 		else {
 			dark1.setAlpha(1);
-			
+			battery += CHARGE
+			if (battery >= MAX_BATTERY) {
+				battery = MAX_BATTERY;
+			}
 		}
 
 		mvelocY = 0;
@@ -324,7 +333,7 @@ function updateGame() {
 			state = "showEnd"
 		}
 		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 		
 		var scrollX = 0;
 		var scrollY = 0;
