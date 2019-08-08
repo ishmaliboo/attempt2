@@ -59,6 +59,7 @@ function preload() {
 	end_game = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
 	fire = new Sprite("img/fire.png", 99, 133);
+
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
@@ -371,7 +372,6 @@ function createMaze() {
 	
 	maze = '\
 11111111111111111111111111111111111111111111111111\n\
-1000p0000000m0000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000220000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
