@@ -6,8 +6,8 @@ var audioContext;
 function preload() {
 	startButton = new Button("img/startButton.png", 240, 60, 450, 200);
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 400);
-	snd_start = new Audio("sound/atmosphere-fixed.wav")
-	
+	snd_start = new Audio("sound/atmosphere-fixed.wav");
+	snd_button = new Audio("sound/buttonHover2.wav");
 	
 	backgroundmusic = new soundSource(0, 0, snd_start, new AudioContext());
 	
@@ -17,11 +17,15 @@ function preload() {
 function create() {
 	backgroundmusic.play();
 	instructionButton.createButton();
-	instructionButton.addOverAction(()=>{}, [1]);
+	instructionButton.addOverAction(function(){
+		snd_button.cloneNode().play();
+	}, [1]);
 	instructionButton.addOutAction(()=>{}, [0]);
 	
 	startButton.createButton();
-	startButton.addOverAction(() => {}, [1]);
+	startButton.addOverAction(function(){
+		snd_button.cloneNode().play();
+	}, [1]);
 	startButton.addOutAction(() => {}, [0]);
 	
 	startButton.addUpAction( function(){

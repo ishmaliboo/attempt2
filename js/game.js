@@ -60,7 +60,9 @@ function preload() {
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	// perhaps for start game
-	snd_start = new Audio("sound/atmosphere-fixed.wav")
+	snd_start = new Audio("sound/atmosphere-fixed.wav");
+	
+	snd_button = new Audio("sound/buttonHover2.wav");
 	
 	end_game = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
@@ -127,7 +129,9 @@ function createGameOver() {
 	
 	
 	backButton.createButton();
-	backButton.addOverAction(() => {}, [1]);
+	backButton.addOverAction(function(){
+		snd_button.cloneNode().play();
+		}, [1]);
 	backButton.addOutAction(() => {}, [0]);
 	
 	backButton.addUpAction( function(){
