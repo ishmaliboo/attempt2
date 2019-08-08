@@ -17,6 +17,8 @@
 	
 	var fires, firesounds;
 	
+	var backgroundmusic;
+	
 	var monstersound;
 	
 	var growlcount;
@@ -118,6 +120,9 @@ function wonGame() {
 	}
 	dark1.kill();
 	torch.kill();
+	
+	backgroundmusic.play();
+	
 	fires[0].create(300, 400);
 	fires[1].create(700, 400);
 	
@@ -154,7 +159,7 @@ function lostGame() {
 	if (time >= 100){
 		jump.kill();
 		
-		
+		backgroundmusic.play();
 		gameOver.create(0, 0);
 		
 		fires[0] = fire.create(200, 250);
@@ -178,8 +183,8 @@ function lostGame() {
 
 function createMenu() {
 	console.log("created menu");
-	
-	
+	backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
+	backgroundmusic.play();
 	
 	//startButton = game.add.button(game.world.centerX - 95, 400, 'button');
 	
@@ -207,6 +212,7 @@ function updateMenu() {
 		//instructionButton.destroy();
 		//startButton.destroy();
 		// startButton.kill();
+		backgroundmusic.stop();
 		console.log('Click');
 		createGame();
 		state = "game";
@@ -239,6 +245,7 @@ function createGame() {
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
 		monstersound = new soundSource(0, 0, snd_monster, audioContext);
+		
 		
 		ambient.play();
 		
