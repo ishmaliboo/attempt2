@@ -1,8 +1,12 @@
 
-	var game = new Game(1000, 1000, 'dark maze');
+	var game = new Game(1000, 600, 'dark maze');
+
+	const MAX_BATTERY = 100;
+	const CHARGE = 0.1;
+	
 	var player, boy, floor, fire;
-	var player, boy, floor, torch;
-	var battery = 100;
+	var floorsprite, torch;
+	var battery = MAX_BATTERY;
 	var score = 0;
 	var maxscore = 0;
 
@@ -16,6 +20,8 @@
 	var maze;
 	
 	var fires, firesounds;
+	
+	var backgroundmusic;
 	
 	var monstersound;
 	
@@ -31,16 +37,20 @@
 	
 	var playerstart, monsterstart;
 	
+	var state = "game";
+	
+
+	
 function preload() {
 	
 	startButton = new Button("img/startButton.png", 240, 60,450, 500);
 	
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
 	
-	floor = new Sprite("img/floor.png");
+	floorsprite = new Sprite("img/floor.png");
 	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
-	fire = new Sprite("img/fire.png", 99, 133);
+	
 	monster = new Sprite("img/monster.png");
 	
 	
@@ -49,6 +59,13 @@ function preload() {
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
+	// perhaps for start game
+	snd_start = new Audio("sound/atmosphere-fixed.wav")
+	
+	end_game = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
+	fire = new Sprite("img/fire.png", 99, 133);
+
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
@@ -66,117 +83,107 @@ function preload() {
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
 	
-	end_game = new Sprite("img/JumpScare.png");
-	gameOver = new Sprite("img/GameOver.png");
+	
 	
 	var direction;
 	var velocY;
 	var velocX;
-	
-	var state;
 }
 
 function create() {
-	
-	
-	state = "menu";
-
-	createMenu();
+	createGame();
 }
 
 function update() {
-	if (state == "menu") {
-		updateMenu();
-	} else if (state == "game") {
-		updateGame();
-	}
 	
-	else if (state == "showEnd"){
+	if (state == "game") {
+		updateGame();
+	} else if (state == "showEnd"){
 		if (win == true){
 			state = "end";
 			wonGame();
-			
-		}else if (win == false){
-			
+		} else if (win == false){
 			lostGame();
-			
 		}
-		
 	}
-	
-
 }
 
-function wonGame() {
-	gameOver.create(0, 0);
 
-	//fire2 = fire.create(200, 200);
-	//fire3 = fire.create(600, 200);
+function wonGame() {
+	for(var i = 0 ; i < maxscore; i++){
+		fires[i].kill();
+	}
+	dark1.kill();
+	torch.kill();
+	
+	
+	backgroundmusic.play();
+	
+	fires[0].create(300, 400);
+	fires[1].create(700, 400);
+	
+	fires[0].addAnimation('burn', [0, 1, 2], 10);
+	fires[1].addAnimation('burn', [0, 1, 2], 10);
+	fires[0].playAnimation('burn');
+	fires[1].playAnimation('burn');	
+	gameOver.create(0, -200);
 	
 	txt.textContent = '';
+	monstersound.stop()
+	
+	for(var i = 0 ; i < maxscore; i++){
+		firesounds[i].stop();
+	}
+	
+	
 }
 
 function lostGame() {
+	for(var i = 0 ; i < maxscore; i++){
+		fires[i].kill();
+	}
+	
+	
+	dark1.kill();
+	torch.kill();
 	
 	time += 1;
 	
 	if (time == 1){
-		jump = end_game.create(0, 0, 1000, 1000);
+		jump = end_game.create(0, 0, 1000, 600);
+		snd_monster.cloneNode().play();
 	}
 	if (time >= 100){
+		console.log("killing jumpscare");
 		jump.kill();
-
-		gameOver.create(0, 0);
+		
+		backgroundmusic.play();
+		gameOver.create(0, -200);
+		
+		fires[0] = fire.create(200, 250);
+		fires[1] = fire.create(700, 250);
+		fires[0].addAnimation('burn', [0, 1, 2], 10);
+		fires[1].addAnimation('burn', [0, 1, 2], 10);
+		fires[0].playAnimation('burn');
+		fires[1].playAnimation('burn');
+		
 		state = 'end';
 	}
 	
 	txt.textContent = '';
+	monstersound.stop()
 	
+	for(var i = 0 ; i < maxscore; i++){
+		firesounds[i].stop();
+	}
 	
 }
 
-function createMenu() {
-	console.log("created menu");
-	
-	
-	
-	//startButton = game.add.button(game.world.centerX - 95, 400, 'button');
-	
-	//startButton.onInputOver.add()
-	
-	instructionButton.createButton();
-	instructionButton.addOverAction(()=>{}, [0]);
-	instructionButton.addOutAction(()=>{}, [1]);
-	
-	startButton.createButton();
-	startButton.addOverAction(() => {}, [1]);
-	startButton.addOutAction(() => {}, [0]);
-
-	//startButton.onInputUp(function(){console.log('Hello')});
-	
-	txt.textContent = "";
-}
-
-function updateMenu() {
-	
-	startButton.addUpAction( function(){
-		
-		//Phaser.Input.Gamepad.startButton.destroy();
-		
-		//instructionButton.destroy();
-		//startButton.destroy();
-		// startButton.kill();
-		console.log('Click');
-		createGame();
-		state = "game";
-	} );
-
-}
 
 function createGame() {
-	
+		game.setBackgroundColour("#3f3f3f");
 		
-		floor = floor.create(0, 0, 1000, 1000);
+		floor = floorsprite.create(0, 0, 1000, 1000);
 		
 		
 		createMaze();
@@ -198,9 +205,10 @@ function createGame() {
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
 		monstersound = new soundSource(0, 0, snd_monster, audioContext);
 		
+		
 		ambient.play();
 		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 		
 		
 }
@@ -275,7 +283,10 @@ function updateGame() {
 		
 		else {
 			dark1.setAlpha(1);
-			
+			battery += CHARGE
+			if (battery >= MAX_BATTERY) {
+				battery = MAX_BATTERY;
+			}
 		}
 
 		mvelocY = 0;
@@ -306,18 +317,60 @@ function updateGame() {
 			mvelocX = 0;
 		}
 		
+
+		
 		monster.setVelocityX(mvelocX);
 		monster.setVelocityY(mvelocY);
 		
 		if (score >= maxscore){
 			win = true;
+			backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
 			state = "showEnd";
 		} else if (game.checkCollision(boy, monster) == true){
+			console.log("u ded");
 			win = false;
+			backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
 			state = "showEnd"
 		}
 		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + battery);
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
+		
+		var scrollX = 0;
+		var scrollY = 0;
+		
+		/*if (boy.getX() > 500) {
+			scrollX = boy.getX() - 500;
+
+		}
+		if (boy.getX() < 500) {
+			scrollX = 500 - boy.getX();
+		}
+		if (boy.getY() > 500) {
+			scrollY = boy.getY() - 500;
+
+		}
+		if (boy.getY() < 500) {
+			scrollY = 500 - boy.getY();
+		}*/
+		scrollX = boy.getX() - 500;
+		scrollY = boy.getY() - 300;
+		
+		moveby(boy, scrollX, scrollY);
+		moveby(floor, scrollX, scrollY);
+		for (i=0;i<wall.children.length;i++) {
+			moveby(wall.children[i], scrollX, scrollY);
+		}
+		for (i=0;i<fires.length;i++) {
+			moveby(fires[i], scrollX, scrollY);
+			firesounds[i].x -= scrollX;
+			firesounds[i].y -= scrollY;
+		}
+		moveby(monster, scrollX, scrollY);
+}
+
+function moveby(item, scrollX, scrollY) {
+	item.setX(item.getX() - scrollX);
+	item.setY(item.getY() - scrollY);
 }
 
 function createMaze() {
@@ -328,7 +381,7 @@ function createMaze() {
 	
 	maze = '\
 11111111111111111111111111111111111111111111111111\n\
-1p000000000000000000000000000001000000000000000001\n\
+100000000p0000000000000000000001000000m00220000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
@@ -344,12 +397,12 @@ function createMaze() {
 10000000010000000001000000000001000000000001000001\n\
 11111000011111111111000010000001111111111111100001\n\
 10000000000000000001000010000000000010000000000001\n\
-10000000000000000001000010000000000010000000000001\n\
+10000000000000000001000010000002000010000000000001\n\
 10000000000000000001000010000000000010000000000001\n\
 10000000000000000001000010000000000010000000000001\n\
 10000100000001000001111111111111000010000011111111\n\
 10000100000001000000000000000001000010000010000001\n\
-10000100000001000000000000000001000010000010000001\n\
+10000100000001000002000000000001000010000010000001\n\
 10000100000001000000000000000001000010000010000001\n\
 10000100000001000000000000000001000010000000000001\n\
 10000111111111111111111111000001000010000000000001\n\
@@ -367,7 +420,7 @@ function createMaze() {
 10000010000001000000000000000000000000000000100001\n\
 10000010000001000000000000000000000000000000100001\n\
 10000000000001000000000000000000000000000000100001\n\
-1002000000000111111100m000000000111111111111100001\n\
+10020000000001111111000000000000111111111111100001\n\
 10000000000000000000000000000000000000000000000001\n\
 10000000000000000000000000000000000000000000000001\n\
 11111110000000000000000000000000000000000000000001\n\
