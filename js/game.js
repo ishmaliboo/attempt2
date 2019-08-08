@@ -35,10 +35,9 @@
 	
 function preload() {
 	
-	startButton = new Button("img/startButton.png", 240, 60,450, 500);
 	
-	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
-	instructions = new Sprite("img/Instructions.png");
+	
+	
 	
 	
 	floor = new Sprite("img/floor.png");
@@ -86,15 +85,16 @@ function preload() {
 function create() {
 	
 	
-	state = "menu";
+	state = "game";
+	createGame();
 
-	createMenu();
+	//createMenu();
 }
 
 function update() {
-	if (state == "menu") {
-		updateMenu();
-	} else if (state == "game") {
+	//if (state == "menu") {
+		//updateMenu();
+	 if (state == "game") {
 		updateGame();
 	} else if (state == "showEnd"){
 		if (win == true){
@@ -106,10 +106,10 @@ function update() {
 			lostGame();
 			
 		}
-		
-	} else if (state == "instructions") {
-		updateInstructions();
-	}
+	}	
+	// } else if (state == "instructions") {
+		// updateInstructions();
+	// }
 	
 
 }
@@ -142,55 +142,55 @@ function lostGame() {
 	
 }
 
-function createMenu() {
-	console.log("created menu");
+// function createMenu() {
+	// console.log("created menu");
 	
 	
 	
-	//startButton = game.add.button(game.world.centerX - 95, 400, 'button');
+	// //startButton = game.add.button(game.world.centerX - 95, 400, 'button');
 	
-	//startButton.onInputOver.add()
+	// //startButton.onInputOver.add()
 	
-	instructionButton.createButton();
-	instructionButton.addOverAction(()=>{}, [0]);
-	instructionButton.addOutAction(()=>{}, [1]);
+	// instructionButton.createButton();
+	// instructionButton.addOverAction(()=>{}, [0]);
+	// instructionButton.addOutAction(()=>{}, [1]);
 	
-	startButton.createButton();
-	startButton.addOverAction(() => {}, [1]);
-	startButton.addOutAction(() => {}, [0]);
+	// startButton.createButton();
+	// startButton.addOverAction(() => {}, [1]);
+	// startButton.addOutAction(() => {}, [0]);
 
-	//startButton.onInputUp(function(){console.log('Hello')});
+	// //startButton.onInputUp(function(){console.log('Hello')});
 	
-	txt.textContent = "";
-}
+	// txt.textContent = "";
+// }
 
-function updateMenu() {
+// function updateMenu() {
 	
-	startButton.addUpAction( function(){
-		createGame();
-		state = "game";
-	} );
+	// startButton.addUpAction( function(){
+		// createGame();
+		// state = "game";
+	// } );
 	
-	instructionButton.addUpAction( function(){
-		createInstructions();
-		state = "instructions";
-	} );
+	// instructionButton.addUpAction( function(){
+		// createInstructions();
+		// state = "instructions";
+	// } );
 	
 	
 
-}
+// }
 
-function createInstructions() {
-	instructionsScreen = instructions.create(0, 0, 1000, 1000);
-}
+// function createInstructions() {
+	// instructionsScreen = instructions.create(0, 0, 1000, 1000);
+// }
 
-function updateInstructions() {
+// function updateInstructions() {
 
-	if (space.isDown()) {
-		instructionsScreen.setAlpha(0);
-		state = "menu";
-	}
-}
+	// if (space.isDown()) {
+		// instructionsScreen.setAlpha(0);
+		// state = "menu";
+	// }
+// }
 function createGame() {
 	
 		
