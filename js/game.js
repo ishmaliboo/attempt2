@@ -27,7 +27,7 @@
 	
 	var growlcount;
 	
-	var startButton;
+	var startButton, backButton;
 	
 	var txt;
 	
@@ -43,7 +43,7 @@
 	
 function preload() {
 	
-	startButton = new Button("img/startButton.png", 240, 60,450, 500);
+	
 	
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
 	
@@ -83,7 +83,7 @@ function preload() {
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
 	
-	
+	backButton = new Button("img/backButton.png", 216, 70, 400, 300);
 	
 	var direction;
 	var velocY;
@@ -125,6 +125,16 @@ function createGameOver() {
 	fires[1].playAnimation('burn');	
 	gameOver.create(0, 0);
 	
+	
+	backButton.createButton();
+	backButton.addOverAction(() => {}, [1]);
+	backButton.addOutAction(() => {}, [0]);
+	
+	backButton.addUpAction( function(){
+		window.location.href = "menu.html"
+		
+	} );
+	
 	txt.textContent = '';
 }
 
@@ -158,6 +168,8 @@ function updateLose() {
 
 
 function createGame() {
+	
+	
 		game.setBackgroundColour("#3f3f3f");
 		
 		floor = floorsprite.create(0, 0, 1000, 1000);
