@@ -74,7 +74,7 @@ function preload() {
 	backButton = new Button("img/backButton.png", 216, 70, 400, 330);
 	
 	//preload sounds
-	snd_alien = new Audio("sound/alien.wav");
+	snd_alien = new Audio("sound/Fireplace-SoundBible.com-127901833.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
@@ -469,7 +469,7 @@ function createMaze() {
 			} else if (maze[y][x] == "2") {
 				fires.push(spr_fire.create(x*walllength, y*walllength, 32, 64));
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
-				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.7, dmp = 5));
+				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 3, dmp = 8));
 				firesounds[firesounds.length - 1].play();
 				maxscore += 1;
 			} else if (maze[y][x] == "p") {

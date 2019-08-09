@@ -15,9 +15,9 @@ var fires, firesounds;
 
 //audio stuff
 var audioContext;
-var snd_alien, snd_drop, snd_monster, snd_collect, snd_start, snd_button
+var snd_alien, snd_monster, snd_collect, snd_start, snd_button
 
-var ambient, backgroundmusic, monstersound, firesounds;
+var backgroundmusic, monstersound, firesounds;
 
 //input
 var keyboard, up, down, left, right;
@@ -74,8 +74,7 @@ function preload() {
 	backButton = new Button("img/backButton.png", 216, 70, 400, 330);
 	
 	//preload sounds
-	snd_alien = new Audio("sound/alien.wav");
-	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
+	snd_alien = new Audio("sound/Fireplace-SoundBible.com-127901833.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
@@ -234,11 +233,7 @@ function createGame() {
 
 	monster = spr_monster.create(monsterstart[0], monsterstart[1]);
 
-	ambient = new soundSource(100, 100, snd_drop, audioContext);
 	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 8);
-	
-	
-	ambient.play();
 	
 	txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 }
@@ -279,7 +274,6 @@ function updateGame() {
 		fires[i].playAnimation('burn');
 	}
 	
-	ambient.update(boy.getX(), boy.getY());
 	for (i = 0; i < firesounds.length; i++) {
 		firesounds[i].update(boy.getX(), boy.getY())
 	}
@@ -462,7 +456,7 @@ function createMaze() {
 			} else if (maze[y][x] == "2") {
 				fires.push(spr_fire.create(x*walllength, y*walllength, 32, 64));
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
-				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.7, dmp = 5));
+				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 3, dmp = 10));
 				firesounds[firesounds.length - 1].play();
 				maxscore += 1;
 			} else if (maze[y][x] == "p") {
