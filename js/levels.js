@@ -1,53 +1,47 @@
 var game = new Game(1000, 600, 'dark maze');
-var instructionPage;
-var instructions;
-var startButton;
-var backButton;
 
 var snd_start, snd_button;
+var easyButton, hardButton;
 
-function preload() {
-	
-	instructions = new Sprite("img/Instructions.png");
-	//startButton = new Button("img/startButton.png", 240, 60, 700, 200);
-	backButton = new Button("img/backButton.png", 216, 70, 700, 300);
+function preload(){
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
 	snd_button = new Audio("sound/buttonHover2.wav");
+	easyButton = new Button("img/easy.png", 213, 70, 350, 150);
+	hardButton = new Button("img/hardcore.png", 370, 60, 300, 250);
 	
 	backgroundmusic = new soundSource(0, 0, snd_start, new AudioContext());
 }
 
-
 function create() {
 	
 	backgroundmusic.play();
-	game.setBackgroundColour("#585858");
-	instructionPage = instructions.create(50, 0, 600, 600);
-	// startButton.createButton();
-	// startButton.addOverAction(function(){
-		// snd_button.cloneNode().play();
-	// }, [1]);
-	// startButton.addOutAction(() => {}, [0]);
-	
-	backButton.createButton();
-	backButton.addOverAction(function(){
+	easyButton.createButton();
+	easyButton.addOverAction(function(){
 		snd_button.cloneNode().play();
 	}, [1]);
-	backButton.addOutAction(() => {}, [0]);
+	easyButton.addOutAction(() => {}, [0]);
 	
-	startButton.addUpAction( function(){
+	easyButton.addUpAction( function(){
 		window.location.href = "game.html"
 		
 	} );
 	
-	backButton.addUpAction( function(){
-		window.location.href = "menu.html"
+	hardButton.createButton();
+	hardButton.addOverAction(function(){
+		snd_button.cloneNode().play();
+	}, [1]);
+	hardButton.addOutAction(() => {}, [0]);
+	
+	hardButton.addUpAction( function(){
+		window.location.href = "game.html"
 		
 	} );
+	
 }
 
 function update() {
-
+	
+	
 }
 
 function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
