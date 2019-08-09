@@ -231,7 +231,7 @@ function createGame() {
 
 	monster = spr_monster.create(monsterstart[0], monsterstart[1]);
 	
-	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
+	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 8);
 	
 	txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 }

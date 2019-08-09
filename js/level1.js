@@ -235,7 +235,7 @@ function createGame() {
 	monster = spr_monster.create(monsterstart[0], monsterstart[1]);
 
 	ambient = new soundSource(100, 100, snd_drop, audioContext);
-	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
+	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 8);
 	
 	
 	ambient.play();
