@@ -6,6 +6,10 @@ var audioContext;
 function preload() {
 	startButton = new Button("img/startButton.png", 240, 60, 450, 200);
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 400);
+	logoButton = new Button("img/NightLight.png", 278, 200, 70, 200);
+	
+	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
+	
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
 	snd_button = new Audio("sound/buttonHover2.wav");
 	
@@ -36,6 +40,12 @@ function create() {
 	instructionButton.addUpAction( function(){
 		window.location.href = "instruction.html"
 	} );
+	
+	logoButton.createButton();
+	logoButton.addOverAction(function(){
+		snd_monster.cloneNode().play();
+	}, [1]);
+	logoButton.addOutAction(()=>{}, [0]);
 
 }
 
