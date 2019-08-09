@@ -36,7 +36,7 @@ function create() {
 	backButton.addOutAction(() => {}, [0]);
 	
 	startButton.addUpAction( function(){
-		window.location.href = "game.html"
+		window.location.href = "level1.html"
 		
 	} );
 	
