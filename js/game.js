@@ -4,7 +4,9 @@
 	const MAX_BATTERY = 15;
 	const CHARGE = 0.1;
 	
-	var player, boy, floor, fire;
+	var spr_floor, spr_boy, spr_monster, spr_fire;
+	var floor, boy, monster;
+	var fire;
 	var floorsprite, torch;
 	var battery = MAX_BATTERY;
 	var score = 0;
@@ -38,44 +40,39 @@
 	var playerstart, monsterstart;
 	
 	var state = "game";
+
+	var endGame, gameOver;
 	
+	var direction;
+	var velocY;
+	var velocX;
 
 	
 function preload() {
 	
+	spr_floor = new Sprite("img/floor.png");
+	spr_boy = new Sprite("img/boy.png", 64, 64,);
+	spr_monster = new Sprite("img/monster.png");
+	spr_fire = new Sprite("img/fire.png", 99, 133);
 	
-	
-	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
-	
-	floorsprite = new Sprite("img/floor.png");
-	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
 	
-	monster = new Sprite("img/monster.png");
-	
-	
+	endGame = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
+	darkness = new Sprite("img/WhiteHole.png")
+	torch = new Sprite('img/torched.png');
 
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
-	// perhaps for start game
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
-	
 	snd_button = new Audio("sound/buttonHover2.wav");
 	
-	end_game = new Sprite("img/JumpScare.png");
-	gameOver = new Sprite("img/GameOver.png");
-	fire = new Sprite("img/fire.png", 99, 133);
 
-	
-	darkness = new Sprite("img/WhiteHole.png")
-	torch = new Sprite('img/torched.png');
 	
 	txt = document.querySelector('#gametext');
 	
-	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
-
 	audioContext = new AudioContext();
 	
 	keyboard = new Keyboard();
@@ -86,10 +83,6 @@ function preload() {
 	space = keyboard.createSpaceKey();
 	
 	backButton = new Button("img/backButton.png", 216, 70, 400, 330);
-	
-	var direction;
-	var velocY;
-	var velocX;
 }
 
 function create() {
@@ -118,8 +111,8 @@ function createGameOver() {
 	backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
 	backgroundmusic.play();
 	
-	fires[0] = fire.create(100, 150);
-	fires[1] = fire.create(780, 150);
+	fires[0] = spr_fire.create(100, 150);
+	fires[1] = spr_fire.create(780, 150);
 	
 	fires[0].addAnimation('burn', [0, 1, 2, 1], 10);
 	fires[1].addAnimation('burn', [0, 1, 2, 1], 10);
@@ -153,7 +146,7 @@ function createLose() {
 	monstersound.stop()
 	
 	time = 0;
-	jump = end_game.create(0, 0, 1000, 600);
+	jump = endGame.create(0, 0, 1000, 600);
 	snd_monster.cloneNode().play();
 	
 	txt.textContent = '';
@@ -176,14 +169,14 @@ function createGame() {
 	
 		game.setBackgroundColour("#3f3f3f");
 		
-		floor = floorsprite.create(0, 0, 1000, 1000);
+		floor = spr_floor.create(0, 0, 1000, 1000);
 		
 		
 		createMaze();
 		
 		wall.setImmovable(true);
 		
-		boy = player.create(playerstart[0], playerstart[1]);
+		boy = spr_boy.create(playerstart[0], playerstart[1]);
 		dark1 = darkness.create(20 -977, 20-933);
 		torch = torch.create( 20 -987, 20-987);
 
@@ -193,7 +186,7 @@ function createGame() {
 		boy.addAnimation('forward', [12, 13, 14, 15], 10);
 		boy.addAnimation('still', [0], 1);
 
-		monster = monster.create(monsterstart[0], monsterstart[1]);
+		monster = spr_monster.create(monsterstart[0], monsterstart[1]);
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
 		monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
@@ -434,7 +427,7 @@ function createMaze() {
 			if (maze[y][x] == '1') {
 				wall.create(x*walllength, y*walllength, 20, 20)
 			} else if (maze[y][x] == "2") {
-				fires.push(fire.create(x*walllength, y*walllength, 32, 64));
+				fires.push(spr_fire.create(x*walllength, y*walllength, 32, 64));
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
 				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.7, dmp = 5));
 				firesounds[firesounds.length - 1].play();
