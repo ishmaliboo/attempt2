@@ -4,9 +4,11 @@ var game = new Game(1000, 600, 'dark maze');
 var audioContext;
 
 function preload() {
-	startButton = new Button("img/startButton.png", 240, 60, 450, 200);
+	//startButton = new Button("img/startButton.png", 240, 60, 450, 200);
 	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 400);
 	logoButton = new Button("img/NightLight.png", 278, 200, 70, 200);
+	levelButton = new Button("img/level.png", 286, 60, 450, 200)
+	
 	
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	
@@ -26,14 +28,14 @@ function create() {
 	}, [1]);
 	instructionButton.addOutAction(()=>{}, [0]);
 	
-	startButton.createButton();
-	startButton.addOverAction(function(){
+	levelButton.createButton();
+	levelButton.addOverAction(function(){
 		snd_button.cloneNode().play();
 	}, [1]);
-	startButton.addOutAction(() => {}, [0]);
+	levelButton.addOutAction(() => {}, [0]);
 	
-	startButton.addUpAction( function(){
-		window.location.href = "game.html"
+	levelButton.addUpAction( function(){
+		window.location.href = "levels.html"
 		
 	} );
 	
