@@ -6,6 +6,7 @@ var spr_floor, spr_boy, spr_monster, spr_fire, spr_dark;
 var endGame, gameOver;
 var jump;
 var backButton;
+var winScreen, end1, end2, end3, end4;
 
 //objects and groups
 var floor, boy, monster, darkness, torch;
@@ -30,6 +31,7 @@ var score = 0;
 var maxscore = 0;
 var txt;
 var time = 0;
+var text = 0;
 
 var win;
 var direction;
@@ -51,6 +53,15 @@ function preload() {
 	spr_monster = new Sprite("img/monster.png");
 	
 	wall = new Sprite("img/DungeonFloor.jpg");
+
+	//end stuff
+	winScreen = new Sprite("img/winningScreen.png");
+	
+	end1 = new Sprite("img/end_txt1.png");
+	end2 = new Sprite("img/end_txt2.png");
+	end3 = new Sprite("img/end_txt3.png");
+	end4 = new Sprite("img/end_txt4.png");
+	
 	endGame = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
 	spr_fire = new Sprite("img/fire.png", 99, 133);
@@ -93,6 +104,8 @@ function update() {
 		updateGame();
 	} else if (state == "lose"){
 		updateLose();
+	} else if (state == "win"){
+		updateWin();
 	}
 }
 
@@ -108,6 +121,38 @@ function clearGame() {
 	monstersound.stop()
 	
 	txt.textContent = '';
+}
+
+function createWin() {
+	clearGame();
+	
+	time = 0;
+	text = 0;
+	
+	winScreen.create(0, 0, 1000, 600);
+}
+
+function updateWin() {
+	time += 1;
+	
+	if (space.isDown()) {
+		if (time >= 20) {
+			text += 1;
+			if (text == 1) {
+				end1.create(200, 140);
+			} else if (text == 2) {
+				end2.create(200, 200);
+			} else if (text == 3) {
+				end3.create(200, 300);
+			} else if (text == 4) {
+				end4.create(200, 350);
+			} else if (time >= 50) {
+				createGameOver();
+				state = "end";
+			}
+			time = 0;
+		}
+	}
 }
 
 //creates the game over screen
@@ -321,8 +366,8 @@ function updateGame() {
 	
 	if (score >= maxscore){
 		win = true;
-		createGameOver();
-		state = "end";
+		createWin();
+		state = "win";
 	} else if (game.checkCollision(boy, monster) == true){
 		win = false;
 		createLose();
