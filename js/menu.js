@@ -44,7 +44,7 @@ function create() {
 	logoButton.createButton();
 	logoButton.addOverAction(function(){
 		snd_monster.cloneNode().play();
-	}, [1]);
+	}, [1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0]);
 	logoButton.addOutAction(()=>{}, [0]);
 
 }
