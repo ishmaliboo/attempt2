@@ -49,7 +49,7 @@ var state = "game";
 function preload() {
 	//preload assets
 	spr_floor = new Sprite("img/floor.png");
-	spr_boy = new Sprite("img/boy.png", 64, 64,);
+	spr_boy = new Sprite("img/boy_fixed.png", 36, 58,);
 	spr_monster = new Sprite("img/monster.png");
 	
 	wall = new Sprite("img/DungeonFloor.jpg");
