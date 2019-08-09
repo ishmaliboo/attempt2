@@ -66,6 +66,11 @@ function preload() {
 	
 	end_game = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
+	win_game = new Sprite("img/winningScreen.png");
+	win_txt1 = new Sprite(img/end_txt1");
+	win_txt2 = new Sprite(img/end_txt1");
+	win_txt3 = new Sprite(img/end_txt1");
+	win_txt4 = new Sprite(img/end_txt1");
 	fire = new Sprite("img/fire.png", 99, 133);
 
 	
