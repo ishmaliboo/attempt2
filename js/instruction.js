@@ -35,15 +35,15 @@ function create() {
 	}, [1]);
 	backButton.addOutAction(() => {}, [0]);
 	
-	startButton.addUpAction( function(){
-		window.location.href = "level1.html"
+	// startButton.addUpAction( function(){
+		// window.location.href = "level1.html"
 		
-	} );
+	// }, [0]);
 	
 	backButton.addUpAction( function(){
-		window.location.href = "menu.html"
+		window.location.href = "index.html"
 		
-	} );
+	}, [0]);
 }
 
 function update() {

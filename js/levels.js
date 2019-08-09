@@ -22,7 +22,7 @@ function create() {
 	easyButton.addOutAction(() => {}, [0]);
 	
 	easyButton.addUpAction( function(){
-		window.location.href = "game.html"
+		window.location.href = "level1.html"
 		
 	} );
 	
@@ -33,7 +33,7 @@ function create() {
 	hardButton.addOutAction(() => {}, [0]);
 	
 	hardButton.addUpAction( function(){
-		window.location.href = "game.html"
+		window.location.href = "level2.html"
 		
 	} );
 	
