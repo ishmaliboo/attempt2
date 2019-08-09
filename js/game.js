@@ -196,7 +196,7 @@ function createGame() {
 		monster = monster.create(monsterstart[0], monsterstart[1]);
 
 		ambient = new soundSource(100, 100, snd_drop, audioContext);
-		monstersound = new soundSource(0, 0, snd_monster, audioContext);
+		monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
 		
 		
 		ambient.play();
@@ -334,8 +334,8 @@ function updateGame() {
 		if (boy.getY() < 500) {
 			scrollY = 500 - boy.getY();
 		}*/
-		scrollX = boy.getX() - 500;
-		scrollY = boy.getY() - 300;
+		scrollX = boy.getX() - 500 - 32;
+		scrollY = boy.getY() - 300 - 32;
 		
 		moveby(boy, scrollX, scrollY);
 		moveby(floor, scrollX, scrollY);
@@ -436,7 +436,7 @@ function createMaze() {
 			} else if (maze[y][x] == "2") {
 				fires.push(fire.create(x*walllength, y*walllength, 32, 64));
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
-				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
+				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.7, dmp = 5));
 				firesounds[firesounds.length - 1].play();
 				maxscore += 1;
 			} else if (maze[y][x] == "p") {
@@ -448,10 +448,11 @@ function createMaze() {
 	}
 }
 
-function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
+function soundSource(x, y, snd, audioContext, gain = 1, loop = true, dmp = 10) {
 	this.x = x;
 	this.y = y;
 	this.snd = snd;
+	this.dmp = dmp;
 	this.track = audioContext.createMediaElementSource(this.snd);
 	
 	this.panner = new PannerNode(audioContext);
@@ -476,7 +477,7 @@ function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 		this.snd.pause();
 	}
 	
-	this.update = function(playerx, playery, dmp = 10) {
+	this.update = function(playerx, playery, dmp = 1) {
 		var x = (this.x - playerx) / dmp;
 		var y = (this.y - playery) / dmp;
 		
