@@ -1,104 +1,100 @@
-//game context
-var game = new Game(1000, 600, 'dark maze');
 
-//sprites
-var spr_floor, spr_boy, spr_monster, spr_fire, spr_dark;
-var endGame, gameOver;
-var jump;
-var backButton;
+	var game = new Game(1000, 600, 'dark maze');
 
-//objects and groups
-var floor, boy, monster, darkness, torch;
-var wall;
-var fires, firesounds;
+	const MAX_BATTERY = 15;
+	const CHARGE = 0.1;
+	
+	var player, boy, floor, fire;
+	var floorsprite, torch;
+	var battery = MAX_BATTERY;
+	var score = 0;
+	var maxscore = 0;
 
-//audio stuff
-var audioContext;
-var snd_alien, snd_drop, snd_monster, snd_collect, snd_start, snd_button
+	var keyboard, up, down, left, right;
+	
+	var audioContext;
+	var ambient, fire1snd;
+	
+	var wall;
+	
+	var maze;
+	
+	var fires, firesounds;
+	
+	var backgroundmusic;
+	
+	var monstersound;
+	
+	var growlcount;
+	
+	var startButton, backButton;
+	
+	var txt;
+	
+	var win ;
+	
+	var time = 0;
+	
+	var playerstart, monsterstart;
+	
+	var state = "game";
+	
 
-var ambient, backgroundmusic, monstersound, firesounds;
-
-//input
-var keyboard, up, down, left, right;
-
-//game stuff
-const MAX_BATTERY = 15;
-const CHARGE = 0.1;
-
-var battery = MAX_BATTERY;
-var score = 0;
-var maxscore = 0;
-var txt;
-var time = 0;
-
-var win;
-var direction;
-var velocY;
-var velocX;
-var mdirect;
-var mvelocX;
-var mvelocY;
-
-var playerstart, monsterstart;
-var scrollX, scrollY;
-
-var state = "game";
 	
 function preload() {
-	//preload assets
-	spr_floor = new Sprite("img/floor.png");
-	spr_boy = new Sprite("img/boy.png", 64, 64,);
-	spr_monster = new Sprite("img/monster.png");
 	
+	
+	
+	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 600);
+	
+	floorsprite = new Sprite("img/floor.png");
+	player = new Sprite("img/boy.png", 64, 64,);
 	wall = new Sprite("img/DungeonFloor.jpg");
-	endGame = new Sprite("img/JumpScare.png");
-	gameOver = new Sprite("img/GameOver.png");
-	spr_fire = new Sprite("img/fire.png", 99, 133);
 	
-	//preload overlays
-	spr_dark = new Sprite("img/WhiteHole.png")
-	spr_torch = new Sprite('img/torched.png');
+	monster = new Sprite("img/monster.png");
+	
+	
 
-	//preload back button
-	backButton = new Button("img/backButton.png", 216, 70, 400, 330);
-	
-	//preload sounds
 	snd_alien = new Audio("sound/alien.wav");
 	snd_drop = new Audio("sound/SingleWaterDroplet.wav");
 	snd_monster = new Audio("sound/Monster Growl-SoundBible.com-344645592.wav");
 	snd_collect = new Audio("sound/collect_quiet.wav");
+	// perhaps for start game
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
+	
 	snd_button = new Audio("sound/buttonHover2.wav");
 	
-<<<<<<< HEAD
 	end_game = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
 	win_game = new Sprite("img/winningScreen.png");
 	win_txt1 = new Sprite(img/end_txt1");
-	win_txt2 = new Sprite(img/end_txt1");
-	win_txt3 = new Sprite(img/end_txt1");
-	win_txt4 = new Sprite(img/end_txt1");
+	win_txt2 = new Sprite(img/end_txt2");
+	win_txt3 = new Sprite(img/end_txt3");
+	win_txt4 = new Sprite(img/end_txt4");
 	fire = new Sprite("img/fire.png", 99, 133);
 
 	
 	darkness = new Sprite("img/WhiteHole.png")
 	torch = new Sprite('img/torched.png');
 	
-=======
-	//set up text
->>>>>>> 730730868133b21ad1905a745dd23bb6bae9fd64
 	txt = document.querySelector('#gametext');
 	
-	//set up audio
+	// game.load.spritesheet('button', "img/startButton.png", 240, 60);
+
 	audioContext = new AudioContext();
 	
-	//set up input
 	keyboard = new Keyboard();
 	left = keyboard.createLeftKey();
 	right = keyboard.createRightKey();
 	up = keyboard.createUpKey();
 	down = keyboard.createDownKey();
 	space = keyboard.createSpaceKey();
+	
+	backButton = new Button("img/backButton.png", 216, 70, 400, 330);
+	
+	var direction;
+	var velocY;
+	var velocX;
 }
 
 function create() {
@@ -106,6 +102,7 @@ function create() {
 }
 
 function update() {
+	
 	if (state == "game") {
 		updateGame();
 	} else if (state == "lose"){
@@ -113,40 +110,29 @@ function update() {
 	}
 }
 
-//clears everything
-function clearGame() {
+function createGameOver() {
 	for(var i = 0 ; i < maxscore; i++){
 		fires[i].kill();
 		firesounds[i].stop();
 	}
-	darkness.kill();
+	dark1.kill();
 	torch.kill();
 	
 	monstersound.stop()
 	
-	txt.textContent = '';
-}
-
-//creates the game over screen
-function createGameOver() {
-	clearGame();
-	
-	//add background music
 	backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
 	backgroundmusic.play();
 	
-	//add fires
-	fires[0] = spr_fire.create(100, 150);
-	fires[1] = spr_fire.create(780, 150);
+	fires[0] = fire.create(100, 150);
+	fires[1] = fire.create(780, 150);
 	
 	fires[0].addAnimation('burn', [0, 1, 2, 1], 10);
 	fires[1].addAnimation('burn', [0, 1, 2, 1], 10);
 	fires[0].playAnimation('burn');
 	fires[1].playAnimation('burn');	
-	//add game over screen
 	gameOver.create(0, 0);
 	
-	//add back button
+	
 	backButton.createButton();
 	backButton.addOverAction(function(){
 		snd_button.cloneNode().play();
@@ -157,18 +143,27 @@ function createGameOver() {
 		window.location.href = "menu.html"
 		
 	} );
+	
+	txt.textContent = '';
 }
 
-//creates the jumpscare
 function createLose() {
-	clearGame();
+	for(var i = 0 ; i < maxscore; i++){
+		fires[i].kill();
+		firesounds[i].stop();
+	}
+	dark1.kill();
+	torch.kill();
+	
+	monstersound.stop()
 	
 	time = 0;
-	jump = endGame.create(0, 0, 1000, 600);
+	jump = end_game.create(0, 0, 1000, 600);
 	snd_monster.cloneNode().play();
+	
+	txt.textContent = '';
 }
 
-//when the timer reaches 100, clears the jumpscare and goes to game over
 function updateLose() {
 	time += 1;
 	if (time >= 100){
@@ -182,34 +177,38 @@ function updateLose() {
 
 
 function createGame() {
-	game.setBackgroundColour("#3f3f3f");
-	
-	floor = spr_floor.create(0, 0, 1000, 1000);
 	
 	
-	createMaze();
-	
-	wall.setImmovable(true);
-	
-	boy = spr_boy.create(playerstart[0], playerstart[1]);
-	darkness = spr_dark.create(20 -977, 20-933);
-	torch = spr_torch.create( 20 -987, 20-987);
+		game.setBackgroundColour("#3f3f3f");
+		
+		floor = floorsprite.create(0, 0, 1000, 1000);
+		
+		
+		createMaze();
+		
+		wall.setImmovable(true);
+		
+		boy = player.create(playerstart[0], playerstart[1]);
+		dark1 = darkness.create(20 -977, 20-933);
+		torch = torch.create( 20 -987, 20-987);
 
-	boy.addAnimation('back', [0, 1, 2, 3], 10);
-	boy.addAnimation('left', [4, 5, 6, 7], 10);
-	boy.addAnimation('right', [8, 9, 10, 11], 10);
-	boy.addAnimation('forward', [12, 13, 14, 15], 10);
-	boy.addAnimation('still', [0], 1);
+		boy.addAnimation('back', [0, 1, 2, 3], 10);
+		boy.addAnimation('left', [4, 5, 6, 7], 10);
+		boy.addAnimation('right', [8, 9, 10, 11], 10);
+		boy.addAnimation('forward', [12, 13, 14, 15], 10);
+		boy.addAnimation('still', [0], 1);
 
-	monster = spr_monster.create(monsterstart[0], monsterstart[1]);
+		monster = monster.create(monsterstart[0], monsterstart[1]);
 
-	ambient = new soundSource(100, 100, snd_drop, audioContext);
-	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
-	
-	
-	ambient.play();
-	
-	txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
+		ambient = new soundSource(100, 100, snd_drop, audioContext);
+		monstersound = new soundSource(0, 0, snd_monster, audioContext);
+		
+		
+		ambient.play();
+		
+		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
+		
+		
 }
 
 
@@ -269,19 +268,19 @@ function updateGame() {
 			}
 		}
 		
-		darkness.setX(boy.getX() - 977 + 32);
-		darkness.setY(boy.getY() - 933 + 32);
+		dark1.setX(boy.getX() - 977 + 32);
+		dark1.setY(boy.getY() - 933 + 32);
 		
 		torch.setX(boy.getX() - 987 + 32);
 		torch.setY(boy.getY() - 987 + 32);
 		
 		if (space.isDown() && battery > 1) {
-			darkness.setAlpha(0);
+			dark1.setAlpha(0);
 			battery = battery - (1)
 		}
 		
 		else {
-			darkness.setAlpha(1);
+			dark1.setAlpha(1);
 			battery += CHARGE
 			if (battery >= MAX_BATTERY) {
 				battery = MAX_BATTERY;
@@ -323,11 +322,25 @@ function updateGame() {
 		
 		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 		
-		scrollX = 0;
-		scrollY = 0;
+		var scrollX = 0;
+		var scrollY = 0;
 		
-		scrollX = boy.getX() - 500 + 32;
-		scrollY = boy.getY() - 300 + 32;
+		/*if (boy.getX() > 500) {
+			scrollX = boy.getX() - 500;
+
+		}
+		if (boy.getX() < 500) {
+			scrollX = 500 - boy.getX();
+		}
+		if (boy.getY() > 500) {
+			scrollY = boy.getY() - 500;
+
+		}
+		if (boy.getY() < 500) {
+			scrollY = 500 - boy.getY();
+		}*/
+		scrollX = boy.getX() - 500;
+		scrollY = boy.getY() - 300;
 		
 		moveby(boy, scrollX, scrollY);
 		moveby(floor, scrollX, scrollY);
@@ -352,20 +365,18 @@ function updateGame() {
 		}
 }
 
-//moves an item by a value, used for scrolling
 function moveby(item, scrollX, scrollY) {
 	item.setX(item.getX() - scrollX);
 	item.setY(item.getY() - scrollY);
 }
 
-//creates the game level
 function createMaze() {
 	fires = new Array();
 	firesounds = new Array();
 	
 	var walllength = 20;
 	
-	var maze = '\
+	maze = '\
 11111111111111111111111111111111111111111111111111\n\
 100000000p0000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000200000000000001\n\
@@ -428,9 +439,9 @@ function createMaze() {
 			if (maze[y][x] == '1') {
 				wall.create(x*walllength, y*walllength, 20, 20)
 			} else if (maze[y][x] == "2") {
-				fires.push(spr_fire.create(x*walllength, y*walllength, 32, 64));
+				fires.push(fire.create(x*walllength, y*walllength, 32, 64));
 				fires[fires.length - 1].addAnimation('burn', [0, 1, 2, 1], 10);
-				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.7, dmp = 5));
+				firesounds.push(new soundSource(x*walllength, y*walllength, snd_alien.cloneNode(), audioContext, gain = 0.1));
 				firesounds[firesounds.length - 1].play();
 				maxscore += 1;
 			} else if (maze[y][x] == "p") {
@@ -442,12 +453,10 @@ function createMaze() {
 	}
 }
 
-//class for a source of sound, used for directional audio
-function soundSource(x, y, snd, audioContext, gain = 1, loop = true, dmp = 10) {
+function soundSource(x, y, snd, audioContext, gain = 1, loop = true) {
 	this.x = x;
 	this.y = y;
 	this.snd = snd;
-	this.dmp = dmp;
 	this.track = audioContext.createMediaElementSource(this.snd);
 	
 	this.panner = new PannerNode(audioContext);
@@ -472,7 +481,7 @@ function soundSource(x, y, snd, audioContext, gain = 1, loop = true, dmp = 10) {
 		this.snd.pause();
 	}
 	
-	this.update = function(playerx, playery, dmp = 1) {
+	this.update = function(playerx, playery, dmp = 10) {
 		var x = (this.x - playerx) / dmp;
 		var y = (this.y - playery) / dmp;
 		
