@@ -24,29 +24,36 @@ var keyboard, up, down, left, right;
 //game stuff
 const MAX_BATTERY = 15;
 const CHARGE = 0.1;
+
 var battery = MAX_BATTERY;
 var score = 0;
 var maxscore = 0;
 var txt;
 var time = 0;
-var state = "game";
+
 var win;
 var direction;
 var velocY;
 var velocX;
+var mdirect;
+var mvelocX;
+var mvelocY;
+
 var playerstart, monsterstart;
+var scrollX, scrollY;
+
+var state = "game";
 	
 function preload() {
 	//preload assets
 	spr_floor = new Sprite("img/floor.png");
 	spr_boy = new Sprite("img/boy.png", 64, 64,);
 	spr_monster = new Sprite("img/monster.png");
+	
+	wall = new Sprite("img/DungeonFloor.jpg");
 	endGame = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
 	spr_fire = new Sprite("img/fire.png", 99, 133);
-	
-	//load wall
-	wall = new Sprite("img/DungeonFloor.jpg");
 	
 	//preload overlays
 	spr_dark = new Sprite("img/WhiteHole.png")
@@ -90,9 +97,8 @@ function update() {
 	}
 }
 
-//creates the game over screen
-function createGameOver() {
-	//clear everything
+//clears everything
+function clearGame() {
 	for(var i = 0 ; i < maxscore; i++){
 		fires[i].kill();
 		firesounds[i].stop();
@@ -103,6 +109,11 @@ function createGameOver() {
 	monstersound.stop()
 	
 	txt.textContent = '';
+}
+
+//creates the game over screen
+function createGameOver() {
+	clearGame();
 	
 	//add background music
 	backgroundmusic = new soundSource(0, 0, snd_start, audioContext);
@@ -132,23 +143,16 @@ function createGameOver() {
 	} );
 }
 
+//creates the jumpscare
 function createLose() {
-	for(var i = 0 ; i < maxscore; i++){
-		fires[i].kill();
-		firesounds[i].stop();
-	}
-	darkness.kill();
-	torch.kill();
-	
-	monstersound.stop()
+	clearGame();
 	
 	time = 0;
 	jump = endGame.create(0, 0, 1000, 600);
 	snd_monster.cloneNode().play();
-	
-	txt.textContent = '';
 }
 
+//when the timer reaches 100, clears the jumpscare and goes to game over
 function updateLose() {
 	time += 1;
 	if (time >= 100){
@@ -162,38 +166,34 @@ function updateLose() {
 
 
 function createGame() {
+	game.setBackgroundColour("#3f3f3f");
+	
+	floor = spr_floor.create(0, 0, 1000, 1000);
 	
 	
-		game.setBackgroundColour("#3f3f3f");
-		
-		floor = spr_floor.create(0, 0, 1000, 1000);
-		
-		
-		createMaze();
-		
-		wall.setImmovable(true);
-		
-		boy = spr_boy.create(playerstart[0], playerstart[1]);
-		darkness = spr_dark.create(20 -977, 20-933);
-		torch = spr_torch.create( 20 -987, 20-987);
+	createMaze();
+	
+	wall.setImmovable(true);
+	
+	boy = spr_boy.create(playerstart[0], playerstart[1]);
+	darkness = spr_dark.create(20 -977, 20-933);
+	torch = spr_torch.create( 20 -987, 20-987);
 
-		boy.addAnimation('back', [0, 1, 2, 3], 10);
-		boy.addAnimation('left', [4, 5, 6, 7], 10);
-		boy.addAnimation('right', [8, 9, 10, 11], 10);
-		boy.addAnimation('forward', [12, 13, 14, 15], 10);
-		boy.addAnimation('still', [0], 1);
+	boy.addAnimation('back', [0, 1, 2, 3], 10);
+	boy.addAnimation('left', [4, 5, 6, 7], 10);
+	boy.addAnimation('right', [8, 9, 10, 11], 10);
+	boy.addAnimation('forward', [12, 13, 14, 15], 10);
+	boy.addAnimation('still', [0], 1);
 
-		monster = spr_monster.create(monsterstart[0], monsterstart[1]);
+	monster = spr_monster.create(monsterstart[0], monsterstart[1]);
 
-		ambient = new soundSource(100, 100, snd_drop, audioContext);
-		monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
-		
-		
-		ambient.play();
-		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
-		
-		
+	ambient = new soundSource(100, 100, snd_drop, audioContext);
+	monstersound = new soundSource(0, 0, snd_monster, audioContext, dmp = 3);
+	
+	
+	ambient.play();
+	
+	txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 }
 
 
@@ -307,23 +307,9 @@ function updateGame() {
 		
 		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
 		
-		var scrollX = 0;
-		var scrollY = 0;
+		scrollX = 0;
+		scrollY = 0;
 		
-		/*if (boy.getX() > 500) {
-			scrollX = boy.getX() - 500;
-
-		}
-		if (boy.getX() < 500) {
-			scrollX = 500 - boy.getX();
-		}
-		if (boy.getY() > 500) {
-			scrollY = boy.getY() - 500;
-
-		}
-		if (boy.getY() < 500) {
-			scrollY = 500 - boy.getY();
-		}*/
 		scrollX = boy.getX() - 500 + 32;
 		scrollY = boy.getY() - 300 + 32;
 		
@@ -350,11 +336,13 @@ function updateGame() {
 		}
 }
 
+//moves an item by a value, used for scrolling
 function moveby(item, scrollX, scrollY) {
 	item.setX(item.getX() - scrollX);
 	item.setY(item.getY() - scrollY);
 }
 
+//creates the game level
 function createMaze() {
 	fires = new Array();
 	firesounds = new Array();
@@ -438,6 +426,7 @@ function createMaze() {
 	}
 }
 
+//class for a source of sound, used for directional audio
 function soundSource(x, y, snd, audioContext, gain = 1, loop = true, dmp = 10) {
 	this.x = x;
 	this.y = y;
