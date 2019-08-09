@@ -41,14 +41,14 @@ function preload() {
 	spr_floor = new Sprite("img/floor.png");
 	spr_boy = new Sprite("img/boy.png", 64, 64,);
 	spr_monster = new Sprite("img/monster.png");
+	endGame = new Sprite("img/JumpScare.png");
+	gameOver = new Sprite("img/GameOver.png");
 	spr_fire = new Sprite("img/fire.png", 99, 133);
 	
 	//load wall
 	wall = new Sprite("img/DungeonFloor.jpg");
 	
 	//preload overlays
-	endGame = new Sprite("img/JumpScare.png");
-	gameOver = new Sprite("img/GameOver.png");
 	spr_dark = new Sprite("img/WhiteHole.png")
 	spr_torch = new Sprite('img/torched.png');
 
