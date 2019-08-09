@@ -6,6 +6,7 @@ var spr_floor, spr_boy, spr_monster, spr_fire, spr_dark;
 var endGame, gameOver;
 var jump;
 var backButton;
+var winScreen, end1, end2, end3, end4;
 
 //objects and groups
 var floor, boy, monster, darkness, torch;
@@ -30,6 +31,7 @@ var score = 0;
 var maxscore = 0;
 var txt;
 var time = 0;
+var text = 0;
 
 var win;
 var direction;
@@ -51,6 +53,15 @@ function preload() {
 	spr_monster = new Sprite("img/monster.png");
 	
 	wall = new Sprite("img/DungeonFloor.jpg");
+
+	//end stuff
+	winScreen = new Sprite("img/winningScreen.png");
+	
+	end1 = new Sprite("img/end_txt1.png");
+	end2 = new Sprite("img/end_txt2.png");
+	end3 = new Sprite("img/end_txt3.png");
+	end4 = new Sprite("img/end_txt4.png");
+	
 	endGame = new Sprite("img/JumpScare.png");
 	gameOver = new Sprite("img/GameOver.png");
 	spr_fire = new Sprite("img/fire.png", 99, 133);
@@ -69,6 +80,8 @@ function preload() {
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
 	snd_button = new Audio("sound/buttonHover2.wav");
+
+
 	
 	//set up text
 	txt = document.querySelector('#gametext');
@@ -94,6 +107,8 @@ function update() {
 		updateGame();
 	} else if (state == "lose"){
 		updateLose();
+	} else if (state == "win"){
+		updateWin();
 	}
 }
 
@@ -141,6 +156,38 @@ function createGameOver() {
 		window.location.href = "menu.html"
 		
 	} );
+}
+
+function createWin() {
+	clearGame();
+	
+	time = 0;
+	text = 0;
+	
+	winScreen.create(0, 0, 1000, 600);
+}
+
+function updateWin() {
+	time += 1;
+	
+	if (space.isDown()) {
+		if (time >= 20) {
+			text += 1;
+			if (text == 1) {
+				end1.create(200, 140);
+			} else if (text == 2) {
+				end2.create(200, 200);
+			} else if (text == 3) {
+				end3.create(200, 300);
+			} else if (text == 4) {
+				end4.create(200, 350);
+			} else if (time >= 50) {
+				createGameOver();
+				state = "end";
+			}
+			time = 0;
+		}
+	}
 }
 
 //creates the jumpscare
@@ -327,8 +374,8 @@ function updateGame() {
 	
 	if (score >= maxscore){
 		win = true;
-		createGameOver();
-		state = "end";
+		createWin();
+		state = "win";
 	} else if (game.checkCollision(boy, monster) == true){
 		win = false;
 		createLose();
@@ -351,8 +398,8 @@ function createMaze() {
 	
 	var maze = '\
 11111111111111111111111111111111111111111111111111\n\
-100000000p0000000000000000000001000000000000000001\n\
-10000000000000000000000000000001000200000000000001\n\
+100000000p2000000000000000000001000000000000000001\n\
+10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000000000000000000000000000001000000000000000001\n\
 10000111110000100001111100000001111111111111100001\n\
@@ -361,7 +408,7 @@ function createMaze() {
 10000100000000100001000000000000000000100000000001\n\
 10000100000000100001000000000000000000100000000001\n\
 10000111111111100001000011111111000000100001000001\n\
-10000000010002000001000000000001000000000001000001\n\
+10000000010000000001000000000001000000000001000001\n\
 10000000010000000001000000000001000000000001000001\n\
 10000000010000000001000000000001000000000001000001\n\
 10000000010000000001000000000001000000000001000001\n\
@@ -371,7 +418,7 @@ function createMaze() {
 10000000000000000001000010000000000010000000000001\n\
 10000000000000000001000010000000000010000000000001\n\
 10000100000001000001111111111111000010000011111111\n\
-10000100000001000020000000000001000010000010000001\n\
+10000100000001000000000000000001000010000010000001\n\
 10000100000001000000000000000001000010000010000001\n\
 10000100000001000000000000000001000010000010000001\n\
 10000100000001000000000000000001000010000000000001\n\
@@ -386,7 +433,7 @@ function createMaze() {
 10000000000001111111000010000000000000000000111111\n\
 10000000000001000000000010000000000000000000100001\n\
 10000011111111000000000011111111111111000000100001\n\
-10000010200001000000000000000000200000000000100001\n\
+10000010000001000000000000000000000000000000100001\n\
 10000010000001000000000000000000000000000000100001\n\
 10000010000001000000000000000000000000000000100001\n\
 10000000000001000000000000000000000000000000100001\n\
