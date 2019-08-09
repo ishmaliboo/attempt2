@@ -79,6 +79,7 @@ function preload() {
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
 	snd_button = new Audio("sound/buttonHover2.wav");
+	snd_win = new Audio("sound/endmusic.wav");
 	
 	//set up text
 	txt = document.querySelector('#gametext');
@@ -125,7 +126,8 @@ function clearGame() {
 
 function createWin() {
 	clearGame();
-	
+	winSound = snd_win.cloneNode();
+	winSound.play();
 	time = 0;
 	text = 0;
 	
@@ -147,6 +149,7 @@ function updateWin() {
 			} else if (text == 4) {
 				end4.create(200, 350);
 			} else if (time >= 50) {
+				winSound.pause();
 				createGameOver();
 				state = "end";
 			}

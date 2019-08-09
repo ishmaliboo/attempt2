@@ -5,7 +5,7 @@ var audioContext;
 
 function preload() {
 	//startButton = new Button("img/startButton.png", 240, 60, 450, 200);
-	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 400);
+	instructionButton = new Button("img/instructionButton.png", 521, 60, 400, 350);
 	logoButton = new Button("img/NightLight.png", 278, 200, 70, 200);
 	levelButton = new Button("img/level.png", 286, 60, 450, 200)
 	

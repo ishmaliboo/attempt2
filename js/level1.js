@@ -15,7 +15,9 @@ var fires, firesounds;
 
 //audio stuff
 var audioContext;
-var snd_alien, snd_drop, snd_monster, snd_collect, snd_start, snd_button
+var snd_alien, snd_drop, snd_monster, snd_collect, snd_start, snd_button, snd_win;
+
+var winSound;
 
 var ambient, backgroundmusic, monstersound, firesounds;
 
@@ -80,6 +82,7 @@ function preload() {
 	snd_collect = new Audio("sound/collect_quiet.wav");
 	snd_start = new Audio("sound/atmosphere-fixed.wav");
 	snd_button = new Audio("sound/buttonHover2.wav");
+	snd_win = new Audio("sound/endmusic.wav");
 
 
 	
@@ -161,6 +164,8 @@ function createGameOver() {
 function createWin() {
 	clearGame();
 	
+	winSound = snd_win.cloneNode();
+	winSound.play();
 	time = 0;
 	text = 0;
 	
@@ -182,8 +187,11 @@ function updateWin() {
 			} else if (text == 4) {
 				end4.create(200, 350);
 			} else if (time >= 50) {
+				winSound.pause();
 				createGameOver();
+				
 				state = "end";
+				
 			}
 			time = 0;
 		}
