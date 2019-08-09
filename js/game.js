@@ -198,142 +198,142 @@ function createGame() {
 
 
 function updateGame() {
-		velocY = 0;
-		velocX = 0;
-		if (left.isDown()) {
-			direction = 'left';
-			velocX += -100;
+	velocY = 0;
+	velocX = 0;
+	if (left.isDown()) {
+		direction = 'left';
+		velocX += -100;
+	}
+	
+	if (right.isDown()) {
+		direction = 'right'
+		velocX += 100
+	}
+	
+	if (up.isDown()) {
+		direction = 'forward'
+		velocY += -100
+	}
+	
+	if (down.isDown()) {
+		direction = 'back'
+		velocY += 100
+	}
+	
+	if (velocY == 0 && velocX == 0){
+		direction = 'still';
+	}
+	boy.playAnimation(direction);
+	boy.setVelocityX(velocX);
+	boy.setVelocityY(velocY);
+	game.checkCollision(boy, wall);
+	
+	for (var i = 0; i < fires.length; i++) {
+		fires[i].playAnimation('burn');
+	}
+	
+	ambient.update(boy.getX(), boy.getY());
+	for (i = 0; i < firesounds.length; i++) {
+		firesounds[i].update(boy.getX(), boy.getY())
+	}
+	monstersound.x = monster.getX();
+	monstersound.y = monster.getY();
+	monstersound.update(boy.getX(), boy.getY());
+	
+	if (Math.random() < 0.01) {
+		monstersound.play();
+	}
+	
+	for (i = 0; i < fires.length; i++) {
+		if (game.checkCollision(boy, fires[i])) {
+			fires[i].kill()
+			firesounds[i].stop();
+			score += 1;
+			snd_collect.cloneNode().play();
 		}
-		
-		if (right.isDown()) {
-			direction = 'right'
-			velocX += 100
+	}
+	
+	darkness.setX(boy.getX() - 977 + 32);
+	darkness.setY(boy.getY() - 933 + 32);
+	
+	torch.setX(boy.getX() - 987 + 32);
+	torch.setY(boy.getY() - 987 + 32);
+	
+	if (space.isDown() && battery > 1) {
+		darkness.setAlpha(0);
+		battery = battery - (1)
+	}
+	
+	else {
+		darkness.setAlpha(1);
+		battery += CHARGE
+		if (battery >= MAX_BATTERY) {
+			battery = MAX_BATTERY;
 		}
-		
-		if (up.isDown()) {
-			direction = 'forward'
-			velocY += -100
-		}
-		
-		if (down.isDown()) {
-			direction = 'back'
-			velocY += 100
-		}
-		
-		if (velocY == 0 && velocX == 0){
-			direction = 'still';
-		}
-		boy.playAnimation(direction);
-		boy.setVelocityX(velocX);
-		boy.setVelocityY(velocY);
-		game.checkCollision(boy, wall);
-		
-		for (var i = 0; i < fires.length; i++) {
-			fires[i].playAnimation('burn');
-		}
-		
-		ambient.update(boy.getX(), boy.getY());
-		for (i = 0; i < firesounds.length; i++) {
-			firesounds[i].update(boy.getX(), boy.getY())
-		}
-		monstersound.x = monster.getX();
-		monstersound.y = monster.getY();
-		monstersound.update(boy.getX(), boy.getY());
-		
-		if (Math.random() < 0.01) {
-			monstersound.play();
-		}
-		
-		for (i = 0; i < fires.length; i++) {
-			if (game.checkCollision(boy, fires[i])) {
-				fires[i].kill()
-				firesounds[i].stop();
-				score += 1;
-				snd_collect.cloneNode().play();
-			}
-		}
-		
-		darkness.setX(boy.getX() - 977 + 32);
-		darkness.setY(boy.getY() - 933 + 32);
-		
-		torch.setX(boy.getX() - 987 + 32);
-		torch.setY(boy.getY() - 987 + 32);
-		
-		if (space.isDown() && battery > 1) {
-			darkness.setAlpha(0);
-			battery = battery - (1)
-		}
-		
-		else {
-			darkness.setAlpha(1);
-			battery += CHARGE
-			if (battery >= MAX_BATTERY) {
-				battery = MAX_BATTERY;
-			}
-		}
+	}
 
+	mvelocY = 0;
+	mvelocX = 0;
+	
+
+	if (game.checkCollision(monster,wall)) {
+		mdirect = Math.round(Math.random() * 3);
+	}
+	else if (typeof(mdirect) == 'undefined') {
+		mdirect = Math.round(Math.random() * 3);	
+	}
+
+	if (mdirect == 0){
+		mvelocX = -100;
 		mvelocY = 0;
+	}
+	if (mdirect == 1){
+		mvelocX = 100;
+		mvelocY = 0;
+		}
+	if (mdirect == 2){
+		mvelocY = -100;
 		mvelocX = 0;
-		
+	}
+	if (mdirect == 3){
+		mvelocY = 100;
+		mvelocX = 0;
+	}
+	
 
-		if (game.checkCollision(monster,wall)) {
-			mdirect = Math.round(Math.random() * 3);
-		}
-		else if (typeof(mdirect) == 'undefined') {
-			mdirect = Math.round(Math.random() * 3);	
-		}
-
-		if (mdirect == 0){
-			mvelocX = -100;
-			mvelocY = 0;
-		}
-		if (mdirect == 1){
-			mvelocX = 100;
-			mvelocY = 0;
-			}
-		if (mdirect == 2){
-			mvelocY = -100;
-			mvelocX = 0;
-		}
-		if (mdirect == 3){
-			mvelocY = 100;
-			mvelocX = 0;
-		}
-		
-
-		
-		monster.setVelocityX(mvelocX);
-		monster.setVelocityY(mvelocY);
-		
-		txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
-		
-		scrollX = 0;
-		scrollY = 0;
-		
-		scrollX = boy.getX() - 500 + 32;
-		scrollY = boy.getY() - 300 + 32;
-		
-		moveby(boy, scrollX, scrollY);
-		moveby(floor, scrollX, scrollY);
-		for (i=0;i<wall.children.length;i++) {
-			moveby(wall.children[i], scrollX, scrollY);
-		}
-		for (i=0;i<fires.length;i++) {
-			moveby(fires[i], scrollX, scrollY);
-			firesounds[i].x -= scrollX;
-			firesounds[i].y -= scrollY;
-		}
-		moveby(monster, scrollX, scrollY);
-		
-		if (score >= maxscore){
-			win = true;
-			createGameOver();
-			state = "end";
-		} else if (game.checkCollision(boy, monster) == true){
-			win = false;
-			createLose();
-			state = "lose"
-		}
+	
+	monster.setVelocityX(mvelocX);
+	monster.setVelocityY(mvelocY);
+	
+	txt.textContent = ("Score: " + score + "/" + maxscore + " Battery: " + Math.round(battery));
+	
+	scrollX = 0;
+	scrollY = 0;
+	
+	scrollX = boy.getX() - 500 + 32;
+	scrollY = boy.getY() - 300 + 32;
+	
+	moveby(boy, scrollX, scrollY);
+	moveby(floor, scrollX, scrollY);
+	for (i=0;i<wall.children.length;i++) {
+		moveby(wall.children[i], scrollX, scrollY);
+	}
+	for (i=0;i<fires.length;i++) {
+		moveby(fires[i], scrollX, scrollY);
+		firesounds[i].x -= scrollX;
+		firesounds[i].y -= scrollY;
+	}
+	moveby(monster, scrollX, scrollY);
+	
+	if (score >= maxscore){
+		win = true;
+		createGameOver();
+		state = "end";
+	} else if (game.checkCollision(boy, monster) == true){
+		win = false;
+		createLose();
+		state = "lose"
+	}
 }
 
 //moves an item by a value, used for scrolling
